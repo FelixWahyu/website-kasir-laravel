@@ -108,7 +108,7 @@
             <tbody>
                 @foreach ($transaction->details as $detail)
                     <tr>
-                        <td colspan="2" style="font-weight: bold;">{{ $detail->product->name }}</td>
+                        <td colspan="2" style="font-weight: bold;">{{ $detail->product->product_name }}</td>
                         <td style="text-align: right;">Rp {{ number_format($detail->selling_price, 0, ',', '.') }}</td>
                     </tr>
                     <tr>

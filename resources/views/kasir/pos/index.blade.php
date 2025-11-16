@@ -221,6 +221,8 @@
 
         function renderProductGrid() {
             let filteredProducts = state.products;
+            // console.log("ALL PRODUCTS:", state.products);
+
 
             // 1. Filter Kategori
             if (state.selectedCategory) {
@@ -232,9 +234,8 @@
             // 2. Filter Pencarian (Nama / SKU)
             if (state.searchTerm) {
                 const search = state.searchTerm.toLowerCase();
-                filteredProducts = filteredProducts.filter(
-                    (p) =>
-                    p.product_name.toLowerCase().includes(search) ||
+                filteredProducts = filteredProducts.filter((p) =>
+                    (p.product_name && p.product_name.toLowerCase().includes(search)) ||
                     (p.sku && p.sku.toLowerCase().includes(search))
                 );
             }
@@ -248,8 +249,8 @@
             elements.productGrid.innerHTML = filteredProducts
                 .map(
                     (product) => `
-        <div onclick="addToCart(${product.id})"
-             class="cursor-pointer border rounded-lg p-3 hover:shadow-lg transition duration-150 relative 
+            <div ${product.stock === 0 ? '':`onclick="addToCart(${product.id})"`}
+             class=" ${product.stock === 0 ? 'cursor-not-allowed opacity-50':'cursor-pointer hover:shadow-lg'} w-full h-auto border rounded-lg p-3 transition duration-150 
              ${
                  state.cart.some((item) => item.id === product.id)
                      ? "border-blue-500 ring-2 ring-blue-500"
@@ -262,18 +263,21 @@
             }" 
                  alt="${
                      product.product_name
-                 }" class="w-full h-24 object-cover rounded-md mb-2">
-            <h3 class="font-semibold text-sm truncate">${product.product_name}</h3>
+                 }" class="w-full h-auto object-cover rounded-md mb-2">
+            <h3 class="font-semibold text-sm truncate my-1">${product.product_name}</h3>
             <p class="text-xs text-gray-500">SKU: ${product.sku || "-"}</p>
-            <p class="text-sm font-bold text-green-600">Rp ${formatCurrency(
+            <p class="text-sm font-bold text-blue-600 my-1">Rp ${formatCurrency(
                 product.selling_price
             )}</p>
-            <span class="absolute top-1 right-1 text-xs px-2 py-0.5 rounded-full ${
-                product.stock <= product.stock_minimum
-                    ? "bg-red-100 text-red-700"
-                    : "bg-green-100 text-green-700"
-            }">
-                ${product.stock} Pcs
+            <span class="text-xs px-2 py-1 rounded-full
+                ${product.stock === 0 
+                    ? "bg-gray-300 text-gray-700" 
+                    : product.stock > product.stock_minimum 
+                        ? "bg-green-100 text-green-700" 
+                        : "bg-red-100 text-red-700"
+                }"
+            >
+            ${product.stock === 0 ? "Habis" : `${product.stock} Pcs`}
             </span>
         </div>
     `
@@ -347,10 +351,10 @@
             elements.customerSelectEl.innerHTML = `
         <option value="">Umum (Tanpa Member)</option>
         ${state.customers.map(customer => `
-                <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
-                    ${customer.name} (${customer.phone_number || 'N/A'})
-                </option>
-            `).join("")}
+                                                                                                                                                                                                                                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
+                                                                                                                                                                                                                                        ${customer.name} (${customer.phone_number || 'N/A'})
+                                                                                                                                                                                                                                    </option>
+                                                                                                                                                                                                                                `).join("")}
     `;
             elements.customerSelectEl.value = state.selectedCustomer; // Pastikan seleksi benar
 
@@ -467,6 +471,12 @@
 
         window.addToCart = function(productId) {
             const product = state.products.find((p) => p.id === productId);
+
+            if (product.stock === 0) {
+                alert(`${product.product_name} stock sedang habis dan tidak bisa dibeli.`);
+                return;
+            }
+
             const existingItem = state.cart.find((item) => item.id === productId);
 
             if (existingItem) {

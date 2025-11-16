@@ -15,7 +15,6 @@ class PosController extends Controller
     {
         // Data yang dibutuhkan untuk tampilan POS:
         $products = Product::with('category')
-            ->where('stock', '>', 0) // Hanya tampilkan produk yang stoknya > 0
             ->latest()
             ->get();
 

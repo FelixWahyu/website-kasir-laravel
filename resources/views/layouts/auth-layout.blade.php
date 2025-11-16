@@ -62,7 +62,7 @@
                             </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" onsubmit="return confirm('Apakah anda yakin ingin keluar?')"
+                                <button type="submit" onclick="return confirm('Apakah anda yakin ingin keluar?')"
                                     class="block cursor-pointer w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Logout
                                 </button>
