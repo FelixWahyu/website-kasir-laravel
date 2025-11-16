@@ -1,6 +1,6 @@
 @extends('layouts.auth-layout')
 @section('content')
-    <div class="container px-2 mx-auto max-w-7xl sm:px-4 lg:px-6">
+    <div class="container px-2 mx-auto max-w-7xl sm:px-2 lg:px-4">
         <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Manajemen Produk</h1>
 
         {{-- Pesan Sukses/Error --}}

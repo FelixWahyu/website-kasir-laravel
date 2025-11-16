@@ -1,6 +1,6 @@
 @extends('layouts.auth-layout')
 @section('content')
-    <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="container px-2 mx-auto max-w-7xl sm:px-4 lg:px-6">
         <h1 class="text-3xl font-bold mb-6">Laporan Penjualan</h1>
 
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
@@ -21,7 +21,7 @@
 
                     <div class="flex space-x-2">
                         <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700">
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-md cursor-pointer hover:bg-blue-700">
                             Filter
                         </button>
                         <a href="{{ route('admin.reports') }}"

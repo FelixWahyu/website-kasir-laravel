@@ -1,6 +1,6 @@
 @extends('layouts.auth-layout')
 @section('content')
-    <div class="container px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="container p-2 mx-auto max-w-7xl sm:px-4 lg:px-6">
         <h1 class="text-3xl font-bold mb-8">Dashboard Kasir Hari Ini</h1>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-xl font-semibold mb-4 text-red-600">🚨 Notifikasi Stok</h2>
@@ -33,9 +33,11 @@
                     <tbody>
                         @forelse ($lowStockProducts as $item)
                             <tr>
-                                <td class="text-sm">{{ $item->name }}</td>
-                                <td class="text-sm">{{ $item->stock }}</td>
-                                <td class="text-sm text-red-500 font-semibold">{{ $item->status }}</td>
+                                <td class="text-sm text-left">{{ $item->product_name }}</td>
+                                <td class="text-sm text-center">{{ $item->stock }}</td>
+                                <td
+                                    class="text-sm text-left p-1 rounded-lg {{ $item->status === 'Akan Habis' ? 'text-yellow-500 bg-yellow-50' : 'text-red-500 bg-red-50' }} font-semibold">
+                                    {{ $item->status }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -46,12 +48,13 @@
                 </table>
             </div>
 
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">History Transaksi (10 Terakhir Hari Ini)</h2>
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="bg-white col-span-2 p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">History Transaksi</h2>
+                <table class="min-w-full divide-y text-center divide-gray-200">
                     <thead>
                         <tr>
                             <th class="px-3 py-2 text-xs">Invoice</th>
+                            <th class="px-3 py-2 text-xs">Kasir</th>
                             <th class="px-3 py-2 text-xs">Pelanggan</th>
                             <th class="px-3 py-2 text-xs">Total</th>
                         </tr>
@@ -60,6 +63,7 @@
                         @forelse ($recentTransactions as $transaction)
                             <tr>
                                 <td class="text-sm font-medium">{{ $transaction->invoice_number }}</td>
+                                <td class="text-sm">{{ $transaction->user->name }}</td>
                                 <td class="text-sm">{{ $transaction->customer->name ?? 'Umum' }}</td>
                                 <td class="text-sm font-semibold">Rp {{ number_format($transaction->total_amount) }}</td>
                             </tr>
