@@ -1,0 +1,52 @@
+<?php
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Kasir\PosController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Auth\LoginSessionController;
+use App\Http\Controllers\Kasir\DashboardKasirController;
+use App\Http\Controllers\Kasir\TransactionStoreController;
+
+Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route(Auth::user()->role === 'admin' ? 'admin.dashboard' : 'kasir.dashboard');
+    }
+
+    return view('auth.login');
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisterController::class, 'create']);
+    Route::post('/register', [RegisterController::class, 'store']);
+
+    Route::get('/login', [LoginSessionController::class, 'create'])->name('login');
+    Route::post('/login', [LoginSessionController::class, 'store']);
+});
+
+Route::post('/logout', [LoginSessionController::class, 'destroy'])->middleware('auth')->name('logout');
+
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    Route::resource('/admin/categories', CategoryController::class)->except(['show']);
+
+    Route::resource('/admin/products', ProductController::class);
+
+    Route::resource('/admin/customers', CustomerController::class)->except(['show']);
+
+    Route::get('/admin/reports', [ReportController::class, 'reportIndex'])->name('admin.reports');
+    Route::get('/admin/reports/pdf', [ReportController::class, 'reportPdf'])->name('admin.reports.pdf');
+});
+
+Route::middleware(['auth', 'roles:kasir'])->group(function () {
+    Route::get('/kasir/dashboard', [DashboardKasirController::class, 'index'])->name('kasir.dashboard');
+    Route::get('/kasir/pos', [PosController::class, 'index'])->name('pos.index');
+    Route::post('/kasir/transactions/store', [TransactionStoreController::class, 'store'])->name('transaction.store');
+    Route::get('/receipt/{transaction}', [PosController::class, 'receipt'])->name('receipt.print');
+});
