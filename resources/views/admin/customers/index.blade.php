@@ -5,7 +5,8 @@
 
         {{-- Pesan Sukses/Error --}}
         @if (session('success'))
-            <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">{{ session('success') }}</div>
+            <div id="alert-success" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">{{ session('success') }}
+            </div>
         @endif
 
         <div class="flex justify-end mb-4">
@@ -58,3 +59,13 @@
         <div class="mt-4">{{ $customers->links() }}</div>
     </div>
 @endsection
+@push('script')
+    <script>
+        const alert = document.getElementById('alert-success');
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.4s ease';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 400);
+        }, 2500);
+    </script>
+@endpush

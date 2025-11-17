@@ -351,10 +351,10 @@
             elements.customerSelectEl.innerHTML = `
         <option value="umum">Umum (Tanpa Member)</option>
         ${state.customers.map(customer => `
-                                                                                                                                                                                                                                                                                                                                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
-                                                                                                                                                                                                                                                                                                                                        ${customer.name} (${customer.phone_number || 'N/A'})
-                                                                                                                                                                                                                                                                                                                                    </option>
-                                                                                                                                                                                                                                                                                                                                `).join("")}
+                <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
+                ${customer.name} (Member)
+                </option>
+            `).join("")}
     `;
             elements.customerSelectEl.value = state.selectedCustomer || 'umum'; // Pastikan seleksi benar
 

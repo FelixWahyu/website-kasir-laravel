@@ -39,8 +39,6 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::resource('/admin/products', ProductController::class);
 
-    Route::resource('/admin/customers', CustomerController::class)->except(['show']);
-
     Route::get('/admin/reports', [ReportController::class, 'reportIndex'])->name('admin.reports');
     Route::get('/admin/reports/pdf', [ReportController::class, 'reportPdf'])->name('admin.reports.pdf');
 });
@@ -53,6 +51,7 @@ Route::middleware(['auth', 'roles:kasir'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::resource('/customers', CustomerController::class)->except(['show']);
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
