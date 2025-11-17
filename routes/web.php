@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Auth\LoginSessionController;
 use App\Http\Controllers\Kasir\DashboardKasirController;
 use App\Http\Controllers\Kasir\TransactionStoreController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -49,4 +50,10 @@ Route::middleware(['auth', 'roles:kasir'])->group(function () {
     Route::get('/kasir/pos', [PosController::class, 'index'])->name('pos.index');
     Route::post('/kasir/transactions/store', [TransactionStoreController::class, 'store'])->name('transaction.store');
     Route::get('/receipt/{transaction}', [PosController::class, 'receipt'])->name('receipt.print');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
 });

@@ -3,7 +3,7 @@
     <div class="h-full overflow-y-auto">
         <h1 class="text-2xl font-bold mb-4">Sistem Kasir - {{ Auth::user()->name }}</h1>
 
-        <div id="pos-container" class="flex flex-col px-2 py-2 lg:flex-row gap-6 h-full">
+        <div id="pos-container" class="flex flex-col px-2 py-2 lg:flex-row gap-4 h-full">
 
             {{-- 1. Kolom Kiri: Produk & Kategori (8/12) --}}
             <div class="flex flex-col lg:w-8/12 bg-white p-4 rounded-lg shadow-lg h-[80vh] lg:h-full">
@@ -63,9 +63,9 @@
                             <span>Diskon (<span id="discount-display">Rp 0</span>):</span>
                             <input type="number" id="discount-input" oninput="updateState('discountInput', this.value)"
                                 placeholder="Nilai Diskon" value="0"
-                                class="w-24 text-right px-2 border rounded-md text-sm">
+                                class="w-24 text-right px-2 py-1 border rounded-md text-sm">
                             <select id="discount-type-select" onchange="updateState('discountType', this.value)"
-                                class="text-sm border rounded-md">
+                                class="text-sm p-1 border rounded-md">
                                 <option value="fixed">Rp</option>
                                 <option value="percentage">%</option>
                             </select>
@@ -82,8 +82,8 @@
                             <label for="customer-select" class="block text-sm font-medium mt-2">Pelanggan (Member)</label>
                             {{-- customer-select adalah ID yang kita butuhkan untuk Label fix --}}
                             <select onchange="updateState('selectedCustomer', this.value)" id="customer-select"
-                                class="w-full mt-1 border rounded-md text-sm">
-                                <option value="">Umum (Tanpa Member)</option>
+                                class="w-full mt-1 p-1 border rounded-lg text-sm">
+                                <option value="umum">Umum (Tanpa Member)</option>
                                 {{-- OPTION member biarkan di-render oleh JS jika perlu --}}
                             </select>
                         </div>
@@ -104,7 +104,7 @@
                         </div>
 
                         {{-- UANG DIBAYAR (Jadikan Statis) --}}
-                        <div class="mb-4">
+                        <div class="mb-6">
                             <label for="amount-paid-input" class="block text-sm font-medium">Uang Dibayar (Tunai)</label>
                             {{-- amount-paid-input adalah ID yang kita butuhkan --}}
                             <input type="number" oninput="updateState('amountPaid', this.value)" value="0"
@@ -115,7 +115,7 @@
                 </div>
 
                 {{-- Tombol Checkout (Dorong ke Bawah) --}}
-                <div id="checkout-area" class="mt-auto hidden">
+                <div id="checkout-area" class="hidden">
                     {{-- Konten Kembalian dan Tombol Checkout akan di-render di sini --}}
                 </div>
             </div>
@@ -263,7 +263,7 @@
             }" 
                  alt="${
                      product.product_name
-                 }" class="w-full h-auto object-cover rounded-md mb-2">
+                 }" class="w-full h-auto object-cover border border-gray-200 shadow-sm rounded-md mb-2">
             <h3 class="font-semibold text-sm truncate my-1">${product.product_name}</h3>
             <p class="text-xs text-gray-500">SKU: ${product.sku || "-"}</p>
             <p class="text-sm font-bold text-blue-600 my-1">Rp ${formatCurrency(
@@ -319,16 +319,16 @@
                 <input type="number" onchange="updateCartQuantity(${
                     item.id
                 }, this.value)" value="${item.quantity}" min="1"
-                       class="w-10 text-center text-sm border rounded-md">
+                       class="w-10 text-center p-1 text-sm border rounded-md">
                 <button onclick="removeFromCart(${
                     item.id
-                })" class="text-red-500 hover:text-red-700 cursor-pointer">
+                })" class="text-red-500 ml-4 hover:text-red-700 cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.86 11.14A2 2 0 0116.14 20H7.86a2 2 0 01-1.92-1.86L5 7m5 4v6m4-6v6m4-10H5"/>
                     </svg>
                 </button>
             </div>
-            <p class="ml-4 font-semibold w-20 text-right text-sm">Rp ${formatCurrency(
+            <p class="ml-2 font-semibold w-20 text-right text-sm">Rp ${formatCurrency(
                 item.quantity * item.selling_price
             )}</p>
         </div>
@@ -349,14 +349,14 @@
             // 4. Update Dropdown Customer
             // Render OPSI customer di sini. Hanya render OPTIONS, bukan SELECT-nya.
             elements.customerSelectEl.innerHTML = `
-        <option value="">Umum (Tanpa Member)</option>
+        <option value="umum">Umum (Tanpa Member)</option>
         ${state.customers.map(customer => `
-                                                                                                                                                                                                                                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
-                                                                                                                                                                                                                                        ${customer.name} (${customer.phone_number || 'N/A'})
-                                                                                                                                                                                                                                    </option>
-                                                                                                                                                                                                                                `).join("")}
+                                                                                                                                                                                                                                                                                                                                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
+                                                                                                                                                                                                                                                                                                                                        ${customer.name} (${customer.phone_number || 'N/A'})
+                                                                                                                                                                                                                                                                                                                                    </option>
+                                                                                                                                                                                                                                                                                                                                `).join("")}
     `;
-            elements.customerSelectEl.value = state.selectedCustomer; // Pastikan seleksi benar
+            elements.customerSelectEl.value = state.selectedCustomer || 'umum'; // Pastikan seleksi benar
 
             // 5. Update Input Uang Dibayar
             const isTunai = state.paymentMethod === "tunai";
@@ -646,7 +646,7 @@
 
         function resetTransaction() {
             state.cart = [];
-            state.selectedCustomer = null;
+            state.selectedCustomer = 'umum';
             state.discountInput = 0;
             state.amountPaid = 0;
             state.paymentMethod = "tunai";

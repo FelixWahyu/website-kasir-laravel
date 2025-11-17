@@ -57,8 +57,9 @@
                         <!-- Dropdown Menu -->
                         <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition
                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 z-30">
-                            <a href="" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                Profil
+                            <a href="{{ route('profile.edit') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Edit Profil
                             </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
