@@ -69,8 +69,8 @@ class CustomerController extends Controller
         // 1. Validasi
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'email', 'unique:customers,email'],
-            'phone_number' => ['required', 'string', 'max:20', 'unique:customers,phone_number'],
+            'email' => ['nullable', 'email', 'unique:customers,email,' . $customer->id],
+            'phone_number' => ['required', 'string', 'max:20', 'unique:customers,phone_number,' . $customer->id],
             'address' => ['nullable', 'string', 'max:500'],
         ]);
 

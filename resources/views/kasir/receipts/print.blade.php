@@ -7,7 +7,6 @@
     <title>Struk Penjualan - {{ $transaction->invoice_number }}</title>
 
     <style>
-        /* Gaya Dasar (Untuk tampilan di browser) */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -16,23 +15,18 @@
             color: #000;
         }
 
-        /* Gaya Khusus Printer Termal */
         @media print {
 
-            /* Hapus Margin & Padding Default Browser */
             @page {
                 margin: 0;
                 size: 58mm 297mm;
-                /* Lebar 58mm atau 80mm, tinggi otomatis */
             }
 
             body {
                 width: 58mm;
-                /* Sesuaikan lebar printer Anda (58mm atau 80mm) */
                 margin: 0;
                 padding: 0;
                 font-size: 8pt;
-                /* Font kecil untuk printer termal */
             }
 
             .receipt-container {
@@ -58,10 +52,8 @@
             }
         }
 
-        /* Gaya Visual (Untuk struktur elemen) */
         .receipt-container {
             max-width: 58mm;
-            /* Untuk tampilan di layar */
             margin: 20px auto;
             background: #fff;
             padding: 10px;
@@ -161,7 +153,6 @@
     </div>
 
     <script>
-        // Pemicu otomatis untuk dialog cetak
         window.onload = function() {
             window.print();
 
