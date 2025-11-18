@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Auth\LoginSessionController;
 use App\Http\Controllers\Kasir\DashboardKasirController;
 use App\Http\Controllers\Kasir\TransactionStoreController;
@@ -41,6 +42,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/admin/reports', [ReportController::class, 'reportIndex'])->name('admin.reports');
     Route::get('/admin/reports/pdf', [ReportController::class, 'reportPdf'])->name('admin.reports.pdf');
+
+    Route::get('/admin/settings', [SettingController::class, 'edit'])->name('admin.settings');
+    Route::post('/admin/settings', [SettingController::class, 'update'])->name('settings.update');
 });
 
 Route::middleware(['auth', 'roles:kasir'])->group(function () {
