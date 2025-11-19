@@ -4,7 +4,6 @@
         <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Edit Produk: {{ $product->product_name }}</h1>
 
         <div class="bg-white p-8 rounded-lg shadow-md">
-            {{-- Form EDIT: Perhatikan @method('PUT') dan enctype="multipart/form-data" --}}
             <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data"
                 class="space-y-6">
                 @csrf
@@ -12,9 +11,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    {{-- Kolom Kiri --}}
                     <div class="space-y-6">
-                        {{-- Nama Produk --}}
                         <div>
                             <label for="product_name" class="block text-sm font-medium text-gray-700">Nama Produk *</label>
                             <input type="text" name="product_name" id="product_name" required
@@ -25,7 +22,6 @@
                             @enderror
                         </div>
 
-                        {{-- Kategori --}}
                         <div>
                             <label for="category_id" class="block text-sm font-medium text-gray-700">Kategori *</label>
                             <select name="category_id" id="category_id" required
@@ -43,7 +39,6 @@
                             @enderror
                         </div>
 
-                        {{-- Harga Beli --}}
                         <div>
                             <label for="purchase_price" class="block text-sm font-medium text-gray-700">Harga Beli (Modal)
                                 *</label>
@@ -55,7 +50,6 @@
                             @enderror
                         </div>
 
-                        {{-- Harga Jual --}}
                         <div>
                             <label for="selling_price" class="block text-sm font-medium text-gray-700">Harga Jual *</label>
                             <input type="number" name="selling_price" id="selling_price" required
@@ -67,9 +61,7 @@
                         </div>
                     </div>
 
-                    {{-- Kolom Kanan --}}
                     <div class="space-y-6">
-                        {{-- SKU/Barcode --}}
                         <div>
                             <label for="sku" class="block text-sm font-medium text-gray-700">SKU / Barcode</label>
                             <input type="text" name="sku" id="sku" value="{{ old('sku', $product->sku) }}"
@@ -79,7 +71,6 @@
                             @enderror
                         </div>
 
-                        {{-- Stok Saat Ini --}}
                         <div>
                             <label for="stock" class="block text-sm font-medium text-gray-700">Stok Saat Ini *</label>
                             <input type="number" name="stock" id="stock" required min="0"
@@ -90,7 +81,6 @@
                             @enderror
                         </div>
 
-                        {{-- Stok Minimum --}}
                         <div>
                             <label for="stock_minimum" class="block text-sm font-medium text-gray-700">Stok Minimum
                                 (Notifikasi) *</label>
@@ -102,12 +92,10 @@
                             @enderror
                         </div>
 
-                        {{-- Gambar Produk & Preview --}}
                         <div>
                             <label for="image" class="block text-sm font-medium text-gray-700">Ganti Gambar Produk (Max
                                 2MB)</label>
 
-                            {{-- Preview Gambar Saat Ini --}}
                             @if ($product->image)
                                 <div class="mt-2 mb-2">
                                     <p class="text-xs text-gray-500">Gambar Saat Ini:</p>
@@ -126,7 +114,6 @@
                     </div>
                 </div>
 
-                {{-- Tombol Aksi --}}
                 <div class="flex justify-end space-x-3 pt-4">
                     <a href="{{ route('products.index') }}"
                         class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">

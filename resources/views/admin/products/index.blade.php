@@ -3,7 +3,6 @@
     <div class="container px-2 mx-auto max-w-7xl sm:px-2 lg:px-4">
         <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Manajemen Produk</h1>
 
-        {{-- Pesan Sukses/Error --}}
         @if (session('success'))
             <div id="alert-success" class="alert-message p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
                 {{ session('success') }}
@@ -78,7 +77,7 @@
                                         Edit
                                     </a>
                                     <form action="{{ route('products.destroy', $product) }}" method="POST"
-                                        onsubmit="event.preventDefault(); openConfirmModal(this);">
+                                        onsubmit="openConfirmModal(event,this);">
                                         @csrf @method('DELETE')
                                         <button type="submit"
                                             class="text-red-600 flex items-center px-1 py-0.5 cursor-pointer hover:text-red-800">
@@ -104,16 +103,35 @@
 
         <div class="mt-4">{{ $products->links() }}</div>
     </div>
-    <div id="confirmModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h2 class="text-lg font-bold text-center mb-4">Konfirmasi Hapus</h2>
-            <p class="mb-6">Hati-hati! Menghapus produk akan mempengaruhi laporan. Yakin ingin melanjutkan?</p>
+    <div id="confirmModal"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity duration-300">
+        <div id="modalBox"
+            class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md scale-90 opacity-0 transition-all duration-300">
+
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="bg-red-100 text-red-600 w-10 h-10 rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v4.5m0 3h.01M4.5 12a7.5 7.5 0 1115 0 7.5 7.5 0 01-15 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-lg font-semibold text-gray-800">Konfirmasi Hapus</h2>
+            </div>
+
+            <p class="text-gray-600 mb-6 leading-relaxed">
+                Menghapus produk akan mengubah stok dan laporan penjualan.
+                Apakah Anda yakin ingin melanjutkan?
+            </p>
 
             <div class="flex justify-end space-x-2">
-                <button id="cancelBtn" class="px-4 py-2 bg-gray-300 rounded-md cursor-pointer hover:bg-gray-400">
+                <button id="cancelBtn"
+                    class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 cursor-pointer hover:bg-gray-300 transition">
                     Batal
                 </button>
-                <button id="confirmBtn" class="px-4 py-2 bg-red-600 text-white rounded-md cursor-pointer hover:bg-red-700">
+
+                <button id="confirmBtn"
+                    class="px-4 py-2 rounded-lg bg-red-600 text-white cursor-pointer hover:bg-red-700 transition">
                     Hapus
                 </button>
             </div>
@@ -133,17 +151,24 @@
         });
 
         let formToSubmit = null;
+        const modal = document.getElementById('confirmModal');
+        const modalBox = document.getElementById('modalBox');
 
         function openConfirmModal(form) {
+            event.preventDefault();
             formToSubmit = form;
-            document.getElementById('confirmModal').classList.remove('hidden');
-            document.getElementById('confirmModal').classList.add('flex');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            setTimeout(() => {
+                modalBox.classList.remove('scale-90', 'opacity-0');
+                modalBox.classList.add('scale-100', 'opacity-100');
+            }, 10);
         }
 
         document.getElementById('cancelBtn').addEventListener('click', function() {
-            document.getElementById('confirmModal').classList.add('hidden');
-            document.getElementById('confirmModal').classList.remove('flex');
-            formToSubmit = null;
+            closeModal();
         });
 
         document.getElementById('confirmBtn').addEventListener('click', function() {
@@ -151,5 +176,16 @@
                 formToSubmit.submit();
             }
         });
+
+        function closeModal() {
+            modalBox.classList.add('scale-90', 'opacity-0');
+            modalBox.classList.remove('scale-100', 'opacity-100');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+
+            formToSubmit = null;
+        }
     </script>
 @endpush

@@ -76,7 +76,6 @@
         <tbody>
             @foreach ($transactions as $transaction)
                 @php
-                    // Hitung Laba Kotor per Transaksi
                     $transactionGrossProfit = $transaction->details->sum(function ($detail) {
                         $cost = $detail->product->purchase_price ?? 0;
                         $revenue = $detail->selling_price;
@@ -93,7 +92,6 @@
                     <td class="text-right">Rp {{ number_format($transaction->total_amount, 0, ',', '.') }}</td>
                     <td class="text-right">Rp {{ number_format($transactionGrossProfit, 0, ',', '.') }}</td>
                 </tr>
-                {{-- Detail Item --}}
                 @if ($transaction->details->isNotEmpty())
                     <tr>
                         <td colspan="7" style="padding: 0; border: none; background-color: #f9f9f9;">
@@ -103,7 +101,6 @@
                                         <span style="font-weight: bold;">{{ $detail->product->name }}</span>
                                         ({{ $detail->quantity }}x Rp
                                         {{ number_format($detail->selling_price, 0, ',', '.') }})
-                                        {{-- Hitung Laba Kotor per item, ditampilkan opsional --}}
                                         ({{ number_format((($detail->selling_price ?? 0) - ($detail->product->purchase_price ?? 0)) * $detail->quantity, 0, ',', '.') }}
                                         Laba)
                                     </li>

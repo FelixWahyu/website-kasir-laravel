@@ -57,9 +57,9 @@
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Edit Profil
                             </a>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form id="logoutForm" method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" onclick="return confirm('Apakah anda yakin ingin keluar?')"
+                                <button type="button" onclick="openLogoutModal();"
                                     class="block cursor-pointer w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                     Logout
                                 </button>
@@ -74,6 +74,61 @@
             </main>
         </div>
     </div>
+    <div id="logoutModal"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity duration-300">
+
+        <div id="logoutModalBox"
+            class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm scale-90 opacity-0 transition-all duration-300">
+
+            <h2 class="text-lg font-semibold text-gray-800 mb-3">Konfirmasi Logout</h2>
+
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin keluar dari akun?</p>
+
+            <div class="flex justify-end space-x-2">
+                <button id="cancelLogout"
+                    class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 cursor-pointer hover:bg-gray-300 transition">
+                    Batal
+                </button>
+
+                <button id="confirmLogout"
+                    class="px-4 py-2 rounded-lg bg-red-600 text-white cursor-pointer hover:bg-red-700 transition">
+                    Logout
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        let logoutForm = document.getElementById('logoutForm');
+        const logoutModal = document.getElementById('logoutModal');
+        const logoutModalBox = document.getElementById('logoutModalBox');
+
+        function openLogoutModal() {
+            logoutModal.classList.remove("hidden");
+            logoutModal.classList.add("flex");
+
+            setTimeout(() => {
+                logoutModalBox.classList.remove("scale-90", "opacity-0");
+                logoutModalBox.classList.add("scale-100", "opacity-100");
+            }, 10);
+        }
+
+        function closeLogoutModal() {
+            logoutModalBox.classList.add("scale-90", "opacity-0");
+            logoutModalBox.classList.remove("scale-100", "opacity-100");
+
+            setTimeout(() => {
+                logoutModal.classList.add("hidden");
+                logoutModal.classList.remove("flex");
+            }, 200);
+        }
+
+        document.getElementById("cancelLogout").addEventListener("click", closeLogoutModal);
+
+        document.getElementById("confirmLogout").addEventListener("click", () => {
+            logoutForm.submit();
+        });
+    </script>
     @stack('script')
 </body>
 

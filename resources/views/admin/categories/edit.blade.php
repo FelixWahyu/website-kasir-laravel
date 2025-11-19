@@ -6,14 +6,14 @@
         <div class="max-w-3xl bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
             <form action="{{ route('categories.update', $category) }}" method="POST" class="space-y-4">
                 @csrf
-                @method('PUT') {{-- Metode untuk memicu fungsi update di CategoryController --}}
+                @method('PUT')
 
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama
                         Kategori</label>
                     <input type="text" name="name" id="name" required
                         class="w-full px-3 py-2 mt-1 border border-gray-500 rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value="{{ old('name', $category->name) }}"> {{-- old() untuk error, defaultnya $category->name --}}
+                        value="{{ old('name', $category->name) }}">
                     @error('name')
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror

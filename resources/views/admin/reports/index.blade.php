@@ -76,7 +76,6 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($transactions as $transaction)
                         @php
-                            // Hitung Laba Kotor per Transaksi
                             $transactionGrossProfit = $transaction->details->sum(function ($detail) {
                                 $cost = $detail->product->purchase_price ?? 0;
                                 $revenue = $detail->selling_price;

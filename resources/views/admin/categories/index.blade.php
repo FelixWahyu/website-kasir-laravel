@@ -3,7 +3,6 @@
     <div class="container px-2 mx-auto max-w-7xl sm:px-4 lg:px-6">
         <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Manajemen Kategori</h1>
 
-        {{-- Pesan Sukses/Error --}}
         @if (session('success'))
             <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.400ms x-init="setTimeout(() => show = false, 2500)"
                 class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300">
@@ -65,7 +64,7 @@
                                     </a>
 
                                     <form action="{{ route('categories.destroy', $category) }}" method="POST"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">
+                                        onsubmit="openConfirmModal(event,this);">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -96,4 +95,82 @@
             {{ $categories->links() }}
         </div>
     </div>
+    <div id="confirmModal"
+        class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50 transition-opacity duration-300">
+
+        <div id="modalBox"
+            class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md scale-90 opacity-0 transition-all duration-300">
+
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="bg-red-100 text-red-600 w-10 h-10 rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v4.5m0 3h.01M4.5 12a7.5 7.5 0 1115 0 7.5 7.5 0 01-15 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-lg font-semibold text-gray-800">Konfirmasi Hapus</h2>
+            </div>
+
+            <p class="text-gray-600 mb-6 leading-relaxed">
+                Menghapus category akan mengubah produk.
+                Apakah Anda yakin ingin melanjutkan?
+            </p>
+
+            <div class="flex justify-end space-x-2">
+                <button id="cancelBtn"
+                    class="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 cursor-pointer hover:bg-gray-300 transition">
+                    Batal
+                </button>
+
+                <button id="confirmBtn"
+                    class="px-4 py-2 rounded-lg bg-red-600 text-white cursor-pointer hover:bg-red-700 transition">
+                    Hapus
+                </button>
+            </div>
+        </div>
+    </div>
 @endsection
+@push('script')
+    <script>
+        let formToSubmit = null;
+        const modal = document.getElementById('confirmModal');
+        const modalBox = document.getElementById('modalBox');
+
+        function openConfirmModal(form) {
+            event.preventDefault();
+            formToSubmit = form;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            setTimeout(() => {
+                modalBox.classList.remove('scale-90', 'opacity-0');
+                modalBox.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+        }
+
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            closeModal();
+        });
+
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+            if (formToSubmit) {
+                formToSubmit.submit();
+            }
+        })
+
+        function closeModal() {
+            modalBox.classList.add('scale-90', 'opacity-0');
+            modalBox.classList.remove('scale-100', 'opacity-100');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 200);
+
+            formToSubmit = null;
+        }
+    </script>
+@endpush

@@ -8,7 +8,6 @@
                 @csrf
                 @method('PUT')
 
-                {{-- Nama Pelanggan --}}
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Nama Pelanggan *</label>
                     <input type="text" name="name" id="name" required value="{{ old('name', $customer->name) }}"
@@ -18,7 +17,6 @@
                     @enderror
                 </div>
 
-                {{-- Nomor Telepon (Unik) --}}
                 <div>
                     <label for="phone_number" class="block text-sm font-medium text-gray-700">Nomor Telepon (WA) *</label>
                     <input type="text" name="phone_number" id="phone_number" required
@@ -38,7 +36,6 @@
                     @enderror
                 </div>
 
-                {{-- Alamat --}}
                 <div>
                     <label for="address" class="block text-sm font-medium text-gray-700">Alamat</label>
                     <textarea name="address" id="address" rows="3"
@@ -48,7 +45,6 @@
                     @enderror
                 </div>
 
-                {{-- Tombol Aksi --}}
                 <div class="flex justify-end space-x-3 pt-4">
                     <a href="{{ route('customers.index') }}"
                         class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
