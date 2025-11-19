@@ -12,7 +12,7 @@
         <div class="grid grid-cols-1 gap-6">
 
             <div class="bg-white p-6 rounded-lg shadow-md max-w-3xl">
-                <h2 class="text-xl font-semibold mb-4 border-b pb-2">Update Data Diri</h2>
+                <h2 class="text-xl font-semibold mb-4 pb-2">Update Data Diri</h2>
 
                 <form action="{{ route('profile.update') }}" method="POST" class="space-y-4">
                     @csrf
@@ -67,7 +67,7 @@
             </div>
 
             <div class="bg-white p-6 rounded-lg shadow-md max-w-3xl">
-                <h2 class="text-xl font-semibold mb-4 border-b pb-2">Ganti Password</h2>
+                <h2 class="text-xl font-semibold mb-4 pb-2">Rubah Password</h2>
 
                 <form action="{{ route('profile.password.update') }}" method="POST" class="space-y-4">
                     @csrf

@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
     <div class="container px-4 max-w-3xl sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold mb-6">Pengaturan Aplikasi (Key-Value)</h1>
+        <h1 class="text-3xl font-bold mb-6">Pengaturan Website</h1>
 
         @if (session('success'))
             <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
@@ -52,7 +52,7 @@
 
                 <div class="flex justify-end pt-4">
                     <button type="submit"
-                        class="px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                        class="px-4 py-2 font-semibold cursor-pointer text-white bg-blue-600 rounded-md hover:bg-blue-700">
                         Simpan Pengaturan
                     </button>
                 </div>

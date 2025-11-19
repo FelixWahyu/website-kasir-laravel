@@ -64,13 +64,13 @@
 
         <div class="overflow-x-auto bg-white rounded-lg shadow">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead>
+                <thead class="bg-gray-800">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total Net</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Laba Kotor</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kasir</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase">Invoice</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase">Tanggal</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-white uppercase">Total Net</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-white uppercase">Laba Kotor</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase">Kasir</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">

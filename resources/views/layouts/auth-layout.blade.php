@@ -69,7 +69,7 @@
                 </div>
             </nav>
 
-            <main class="flex-1 p-2.5 md:p-4 h-full">
+            <main class="p-2.5 md:p-4 h-full">
                 @yield('content')
             </main>
         </div>
