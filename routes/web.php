@@ -2,18 +2,19 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Kasir\PosController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Auth\LoginSessionController;
 use App\Http\Controllers\Kasir\DashboardKasirController;
 use App\Http\Controllers\Kasir\TransactionStoreController;
-use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -29,6 +30,11 @@ Route::middleware('guest')->group(function () {
 
     Route::get('/login', [LoginSessionController::class, 'create'])->name('login');
     Route::post('/login', [LoginSessionController::class, 'store']);
+
+    Route::get('/password/reset', [PasswordController::class, 'forgotPassword'])->name('password.request');
+    Route::post('/password/email', [PasswordController::class, 'sendResetEmail'])->name('send.email');
+    Route::get('/password/reset/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/password/reset', [PasswordController::class, 'resetPassword'])->name('password.update');
 });
 
 Route::post('/logout', [LoginSessionController::class, 'destroy'])->middleware('auth')->name('logout');

@@ -36,6 +36,8 @@
                             class="rounded dark:bg-gray-700 border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500">
                         <span class="ml-2 text-sm text-gray-800">Ingat saya</span>
                     </label>
+                    <a href="{{ route('password.request') }}"
+                        class="text-sm text-blue-600 underline hover:text-blue-700">Lupa password</a>
                 </div>
 
                 <div>
@@ -48,7 +50,7 @@
 
             <p class="text-sm text-center">
                 Belum punya akun?
-                <a href="/register" class="font-medium text-blue-500 hover:underline">Register di sini</a>
+                <a href="/register" class="font-medium text-blue-500 hover:underline">Daftar</a>
             </p>
         </div>
     </div>

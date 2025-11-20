@@ -61,7 +61,7 @@
 
             <p class="text-sm text-center">
                 Sudah punya akun?
-                <a href="/login" class="font-medium text-blue-500 hover:underline">Login di sini</a>
+                <a href="/login" class="font-medium text-blue-500 hover:underline">Login</a>
             </p>
         </div>
     </div>
