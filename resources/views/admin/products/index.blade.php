@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
     <div class="container px-2 mx-auto max-w-7xl sm:px-2 lg:px-4">
-        <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Manajemen Produk</h1>
+        <h1 class="text-3xl font-bold mb-6 dark:text-gray-800">Manajemen Produk</h1>
 
         @if (session('success'))
             <div id="alert-success" class="alert-message p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
@@ -15,9 +15,24 @@
         @endif
 
         <div class="flex justify-between mb-4">
-            {{-- Anda bisa tambahkan filter atau pencarian di sini --}}
-            <div class="w-1/3">
-                {{--  --}}
+            <div class="flex items-center w-1/3 gap-1">
+                <form action="{{ route('products.index') }}" method="GET"
+                    class="flex bg-white w-full border border-gray-400 items-center shadow-sm rounded-lg">
+                    <input type="text" id="search" name="search" value="{{ $keyword }}"
+                        class="px-3 py-1 text-gray-400 border-none outline-0 w-full" placeholder="Cari produk...">
+                    <button type="submit"
+                        class="bg-blue-600 py-2 px-3 border border-blue-600 rounded-r-lg cursor-pointer text-white font-bold hover:bg-blue-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </button>
+                </form>
+                @if ($keyword)
+                    <a href="{{ route('products.index') }}"
+                        class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md shadow-md hover:bg-gray-400">Reset</a>
+                @endif
             </div>
             <a href="{{ route('products.create') }}"
                 class="px-4 py-2 text-white bg-blue-600 rounded-md shadow-md hover:bg-blue-700">

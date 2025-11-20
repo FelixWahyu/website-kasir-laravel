@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
     <div class="container px-4 mx-auto sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Edit Pelanggan: {{ $customer->name }}</h1>
+        <h1 class="text-3xl font-bold mb-6">Edit Pelanggan: {{ $customer->name }}</h1>
 
         <div class="bg-white p-8 rounded-lg shadow-md">
             <form action="{{ route('customers.update', $customer) }}" method="POST" class="space-y-6">

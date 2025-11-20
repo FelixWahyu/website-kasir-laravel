@@ -13,10 +13,20 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->latest()->paginate(10);
-        return view('admin.products.index', compact('products'), ['title' => 'Daftar Product']);
+        $keyword = $request->query('search');
+
+        $productQuery = Product::with('category')->latest();
+
+        if ($keyword) {
+            $productQuery->where(function ($query) use ($keyword) {
+                $query->where('product_name', 'like', '%' . $keyword . '%')->orWhere('sku', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        $products = $productQuery->paginate(10)->withQueryString();
+        return view('admin.products.index', compact('products', 'keyword'), ['title' => 'Daftar Product']);
     }
 
     /**

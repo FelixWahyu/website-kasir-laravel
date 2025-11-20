@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
     <div class="container px-2 mx-auto max-w-7xl sm:px-4 lg:px-6">
-        <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Edit Produk: {{ $product->product_name }}</h1>
+        <h1 class="text-3xl font-bold mb-6">Edit Produk: {{ $product->product_name }}</h1>
 
         <div class="bg-white p-8 rounded-lg shadow-md">
             <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data"

@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
     <div class="container px-2 mx-auto max-w-7xl sm:px-4 lg:px-6">
-        <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Manajemen Pelanggan (Member)</h1>
+        <h1 class="text-3xl font-bold mb-6 dark:text-gray-800">Manajemen Pelanggan (Member)</h1>
 
         @if (session('success'))
             <div id="alert-success" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">{{ session('success') }}

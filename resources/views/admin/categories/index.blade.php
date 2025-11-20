@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
     <div class="container px-2 mx-auto max-w-7xl sm:px-4 lg:px-6">
-        <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Manajemen Kategori</h1>
+        <h1 class="text-3xl font-bold mb-6 dark:text-gray-800">Manajemen Kategori</h1>
 
         @if (session('success'))
             <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.400ms x-init="setTimeout(() => show = false, 2500)"
@@ -24,32 +24,32 @@
             </a>
         </div>
 
-        <div class="overflow-x-auto bg-white rounded-lg shadow-md dark:bg-gray-800">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-800 dark:bg-gray-700">
+        <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-800">
                     <tr>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider dark:text-gray-300">
+                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                             No</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider dark:text-gray-300">
+                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                             Nama Kategori</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider dark:text-gray-300">
+                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                             Dibuat Pada</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider dark:text-gray-300">
+                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                             Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($categories as $category)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {{ $loop->iteration }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                 {{ $category->name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                 {{ $category->created_at->format('d M Y H:i') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2">

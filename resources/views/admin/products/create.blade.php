@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
     <div class="container px-4 mx-auto sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold mb-6 dark:text-gray-100">Tambah Produk Baru</h1>
+        <h1 class="text-3xl font-bold mb-6">Tambah Produk Baru</h1>
 
         <div class="bg-white p-8 max-w-5xl rounded-lg shadow-md">
             <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
