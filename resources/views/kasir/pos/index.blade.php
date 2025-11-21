@@ -1,11 +1,11 @@
 @extends('layouts.auth-layout')
 @section('content')
-    <div class="h-full overflow-y-auto">
+    <div class="h-screen w-full">
         <h1 class="text-2xl font-bold mb-4">Sistem Kasir - {{ Auth::user()->name }}</h1>
 
-        <div id="pos-container" class="flex flex-col px-2 py-2 lg:flex-row gap-4 h-full">
+        <div id="pos-container" class="flex flex-col px-2 py-2 lg:flex-row gap-4">
 
-            <div class="flex flex-col lg:w-8/12 bg-white p-4 rounded-lg shadow-lg h-[80vh] lg:h-full">
+            <div class="flex flex-col lg:w-8/12 bg-white p-2 rounded-lg shadow-lg h-[80vh] lg:h-[90vh]">
                 <div class="flex mb-4 gap-2">
                     <input type="text" id="search-input" placeholder="Cari Produk / Scan SKU..."
                         class="flex-1 px-4 py-2 border rounded-lg focus:ring-blue-500"
@@ -28,11 +28,11 @@
                 </div>
 
                 <div id="product-grid"
-                    class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto pr-2 custom-scroll flex-1">
+                    class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-4 gap-4 overflow-y-auto custom-scroll pr-2 flex-1">
                 </div>
             </div>
 
-            <div class="flex flex-col lg:w-4/12 bg-white p-4 rounded-lg shadow-lg h-auto lg:h-full">
+            <div class="flex flex-col lg:w-4/12 bg-white p-4 rounded-lg shadow-lg overflow-y-auto h-[80vh] lg:h-[90vh]">
                 <div id="cart-wrapper">
                     <h2 class="text-xl font-bold mb-4">Keranjang Belanja</h2>
 
@@ -312,10 +312,10 @@
             elements.customerSelectEl.innerHTML = `
         <option value="umum">Umum (Tanpa Member)</option>
         ${state.customers.map(customer => `
-                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
-                    ${customer.name} (Member)
-                    </option>
-                `).join("")}
+                                                                                                                                            <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
+                                                                                                                                            ${customer.name} (Member)
+                                                                                                                                            </option>
+                                                                                                                                        `).join("")}
     `;
             elements.customerSelectEl.value = state.selectedCustomer || 'umum'; // Pastikan seleksi benar
 

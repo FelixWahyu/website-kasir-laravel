@@ -30,7 +30,6 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'unique:customers,email'],
@@ -38,7 +37,6 @@ class CustomerController extends Controller
             'address' => ['nullable', 'string', 'max:500'],
         ]);
 
-        // 2. Simpan data pelanggan
         Customer::create($validated);
 
         return redirect()->route('customers.index')
@@ -66,7 +64,6 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        // 1. Validasi
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'email', 'unique:customers,email,' . $customer->id],
@@ -74,7 +71,6 @@ class CustomerController extends Controller
             'address' => ['nullable', 'string', 'max:500'],
         ]);
 
-        // 2. Update data
         $customer->update($validated);
 
         return redirect()->route('customers.index')
@@ -86,8 +82,9 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        // Catatan: Jika Anda menerapkan sistem Transaksi, Anda harus mengecek 
-        // apakah pelanggan ini memiliki riwayat transaksi sebelum menghapus.
+        if ($customer->transactions()->exists()) {
+            return redirect()->route('customers.index')->with('error', 'Pelanggan tidak dapat dihapus karena memiliki riwayat transaksi.');
+        }
 
         $customer->delete();
 

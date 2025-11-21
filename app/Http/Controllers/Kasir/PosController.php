@@ -13,7 +13,6 @@ class PosController extends Controller
 {
     public function index()
     {
-        // Data yang dibutuhkan untuk tampilan POS:
         $products = Product::with('category')
             ->latest()
             ->get();
@@ -21,7 +20,6 @@ class PosController extends Controller
         $categories = Category::all();
         $customers = Customer::all();
 
-        // Convert ke JSON untuk digunakan oleh Alpine.js
         $productsJson = $products->toJson();
         $customersJson = $customers->toJson();
 
@@ -33,10 +31,8 @@ class PosController extends Controller
      */
     public function receipt(Transaction $transaction)
     {
-        // Eager load details, product, user (kasir), dan customer (member)
         $transaction->load(['details.product', 'user', 'customer']);
 
-        // Pastikan transaksi memiliki details sebelum mencetak
         if ($transaction->details->isEmpty()) {
             abort(404, 'Detail transaksi tidak ditemukan.');
         }

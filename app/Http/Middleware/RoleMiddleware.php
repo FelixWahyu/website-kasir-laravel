@@ -17,18 +17,14 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        // 1. Cek apakah pengguna sudah login
         if (!Auth::check()) {
             return redirect()->route('login');
         }
 
         $user = Auth::user();
 
-        // 2. Cek apakah role pengguna cocok dengan role yang disyaratkan
-        // Menggunakan strtolower agar perbandingan tidak case-sensitive
         if (!in_array($user->role, $roles)) {
-            // Jika role tidak cocok, kembalikan ke home dengan pesan error
-            return redirect('/')
+            return redirect()->route('login')
                 ->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 

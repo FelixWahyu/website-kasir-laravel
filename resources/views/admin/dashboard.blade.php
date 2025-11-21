@@ -30,13 +30,13 @@
             </div>
         </div>
 
-        <div class="bg-white grid grid-cols-1 p-6 rounded-lg shadow-md">
+        <div class="bg-white grid grid-cols-1 p-6 rounded-lg shadow-md border border-gray-300">
             <h2 class="text-xl font-semibold mb-4">Grafik Penjualan (7 Hari Terakhir)</h2>
             <canvas id="salesChart" class="max-h-76"></canvas>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 mt-4 gap-4">
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-300">
                 <h2 class="text-xl font-semibold mb-4">Produk Terlaris (Unit)</h2>
                 <table class="min-w-full divide-y divide-gray-200 border-collapse border border-gray-400">
                     <thead class="bg-gray-700">
@@ -60,7 +60,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-300">
                 <h2 class="text-xl font-semibold mb-4 text-gray-800">Notifikasi Stok</h2>
                 <table class="min-w-full divide-y divide-gray-200 border border-gray-400 border-collapse">
                     <thead class="bg-gray-700">

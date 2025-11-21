@@ -43,7 +43,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validasi
         $validated = $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
             'product_name' => ['required', 'string', 'max:255'],
@@ -55,15 +54,12 @@ class ProductController extends Controller
             'stock_minimum' => ['required', 'integer', 'min:0'],
         ]);
 
-        // 2. Image Upload
         $imagePath = null;
         if ($request->hasFile('image')) {
-            // Simpan file ke folder storage/app/public/products
             $imagePath = $request->file('image')->store('products', 'public');
             $validated['image'] = $imagePath; // Simpan path-nya ke database
         }
 
-        // 3. Simpan data produk
         Product::create($validated);
 
         return redirect()->route('products.index')
@@ -92,7 +88,6 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        // 1. Validasi (Sama seperti store, tapi unik untuk SKU harus dikecualikan)
         $validated = $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
             'product_name' => ['required', 'string', 'max:255'],
@@ -104,21 +99,16 @@ class ProductController extends Controller
             'stock_minimum' => ['required', 'integer', 'min:0'],
         ]);
 
-        // 2. Image Upload/Update
         if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
-            // Simpan gambar baru
             $imagePath = $request->file('image')->store('products', 'public');
             $validated['image'] = $imagePath;
         } else {
-            // Jika tidak ada gambar baru, pertahankan yang lama
             $validated['image'] = $product->image;
         }
 
-        // 3. Simpan data produk
         $product->update($validated);
 
         return redirect()->route('products.index')
@@ -130,12 +120,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        // 1. Hapus gambar dari storage
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }
 
-        // 2. Hapus data produk
         $product->delete();
 
         return redirect()->route('products.index')

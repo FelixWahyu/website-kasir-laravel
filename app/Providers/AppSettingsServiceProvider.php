@@ -23,13 +23,10 @@ class AppSettingsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            // Ambil data hanya sekali dan cache untuk performa
             $settings = Cache::rememberForever('settings', function () {
                 return Setting::pluck('value', 'key')->all();
             });
-            // $settings = \Illuminate\Support\Facades\Cache::remember('settings', 60, function () {
-            //     return Setting::all()->keyBy('key');
-            // });
+
             $view->with('settings', $settings);
         });
     }

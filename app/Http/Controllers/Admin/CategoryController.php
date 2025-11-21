@@ -62,7 +62,6 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $validated = $request->validate([
-            // Pastikan nama baru unik, tapi abaikan nama kategori ini sendiri
             'name' => ['required', 'string', 'max:255', 'unique:categories,name,' . $category->id],
         ]);
 

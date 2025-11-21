@@ -15,16 +15,12 @@ class DashboardController extends Controller
     const STOCK_THRESHOLD = 10;
     public function index()
     {
-        // 1. Total Ringkasan
         $summary = $this->getSummaryData();
 
-        // 2. Notifikasi Stok
         $lowStockProducts = $this->getLowStockProducts();
 
-        // 3. Produk Terlaris (Top 5)
         $topSellingProducts = $this->getTopSellingProducts(5);
 
-        // 4. Data Grafik Penjualan (7 Hari Terakhir)
         $chartData = $this->getSalesChartData(7);
 
         return view('admin.dashboard', compact(
@@ -35,14 +31,12 @@ class DashboardController extends Controller
         ), ['title' => 'Dashboard Admin']);
     }
 
-    // --- Metode Pengumpulan Data ---
 
     private function getSummaryData()
     {
         $totalTransactions = Transaction::all();
-        $allTransactions = Transaction::with('details.product')->get(); // Load relasi untuk hitung laba
+        $allTransactions = Transaction::with('details.product')->get();
 
-        // Helper untuk menghitung Gross Profit dari semua transaksi
         $totalGrossProfit = $allTransactions->sum(function ($transaction) {
             return $transaction->details->sum(function ($detail) {
                 $cost = $detail->product->purchase_price ?? 0;
@@ -53,9 +47,9 @@ class DashboardController extends Controller
         });
 
         return [
-            'total_transactions' => $totalTransactions->count(), // Transaksi Hari Ini
-            'total_revenue' => $totalTransactions->sum('total_amount'), // Pendapatan Hari Ini
-            'total_gross_profit' => $totalGrossProfit, // Laba Kotor Total
+            'total_transactions' => $totalTransactions->count(),
+            'total_revenue' => $totalTransactions->sum('total_amount'),
+            'total_gross_profit' => $totalGrossProfit,
             'total_members' => Customer::count(),
             'total_users' => User::count(),
             'total_products' => Product::count(),
@@ -104,7 +98,7 @@ class DashboardController extends Controller
 
         for ($i = $days - 1; $i >= 0; $i--) {
             $date = now()->subDays($i);
-            $labels[] = $date->format('D, d M'); // e.g., Sat, 15 Nov
+            $labels[] = $date->format('D, d M');
 
             $dailyRevenue = Transaction::whereDate('created_at', $date)
                 ->sum('total_amount');

@@ -20,20 +20,17 @@ class LoginSessionController extends Controller
     }
 
     /**
-     * Memproses upaya login.
+     * Memproses login.
      */
     public function store(Request $request,)
     {
-        // Validasi input dasar
         $credentials = $request->validate([
             'username' => ['required', 'string', 'max:100', 'regex:/^[a-zA-Z0-9_]+$/'],
             'password' => ['required', 'string'],
         ]);
 
-        // Buat key unik untuk setiap username + IP address
-        $throttleKey = Str::lower($request->input('username')) . '|' . $request->ip();
+        $throttleKey = Str::lower($request->input('username')) . '|' . $request->ip() . '|' . substr(hash('sha256', $request->userAgent()), 0, 10);
 
-        // Cek apakah user terlalu sering mencoba login
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
             throw ValidationException::withMessages([
@@ -41,23 +38,18 @@ class LoginSessionController extends Controller
             ]);
         }
 
-        // Coba autentikasi user
         if (! Auth::attempt($credentials, $request->boolean('remember'))) {
-            // Tambah 1 hit ke limiter jika gagal
-            RateLimiter::hit($throttleKey);
+            RateLimiter::hit($throttleKey, 30);
 
             throw ValidationException::withMessages([
                 'username' => 'Username atau password yang Anda masukkan salah.',
-            ])->redirectTo(route('login'));
+            ]);
         }
 
-        // Jika login berhasil, reset percobaan
         RateLimiter::clear($throttleKey);
 
-        // Regenerasi session untuk keamanan
         $request->session()->regenerate();
 
-        // Arahkan user sesuai role
         return match (Auth::user()->role) {
             'admin' => redirect()->intended(route('admin.dashboard')),
             'kasir' => redirect()->intended(route('kasir.dashboard')),
@@ -70,12 +62,12 @@ class LoginSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-        Auth::logout(); // Logout user
+        Auth::logout();
 
-        $request->session()->invalidate(); // Matikan session
+        $request->session()->invalidate();
 
-        $request->session()->regenerateToken(); // Buat token CSRF baru
+        $request->session()->regenerateToken();
 
-        return redirect()->route('login'); // Arahkan ke halaman login
+        return redirect()->route('login');
     }
 }

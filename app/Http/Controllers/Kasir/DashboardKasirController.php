@@ -15,19 +15,16 @@ class DashboardKasirController extends Controller
     {
         $today = now()->today();
 
-        // 1. Total Ringkasan (Hari Ini)
         $todayTransactions = Transaction::whereDate('created_at', $today);
 
         $summary = [
             'total_transactions' => $todayTransactions->count(),
             'total_revenue' => $todayTransactions->sum('total_amount'),
-            'total_members' => Customer::count(), // Total member aktif
+            'total_members' => Customer::count(),
         ];
 
-        // 2. Notifikasi Stok
         $lowStockProducts = $this->getLowStockProducts();
 
-        // 3. History Transaksi (10 Transaksi Terakhir Hari Ini)
         $recentTransactions = Transaction::with('user', 'customer')
             ->orderBy('created_at', 'desc')
             ->limit(10)
@@ -37,7 +34,7 @@ class DashboardKasirController extends Controller
             'summary',
             'lowStockProducts',
             'recentTransactions'
-        ), ['title' => 'Sistem Kasir']);
+        ), ['title' => 'Dashboard']);
     }
 
     private function getLowStockProducts()
