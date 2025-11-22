@@ -17,7 +17,13 @@ class ProductController extends Controller
     {
         $keyword = $request->query('search');
 
-        $productQuery = Product::with('category')->latest();
+        $productQuery = Product::with('category')->orderByRaw("
+            CASE
+            WHEN stock = 0 THEN 0
+            WHEN stock < stock_minimum THEN 1
+            ELSE 2
+            END
+        ")->orderBy('stock', 'asc');
 
         if ($keyword) {
             $productQuery->where(function ($query) use ($keyword) {

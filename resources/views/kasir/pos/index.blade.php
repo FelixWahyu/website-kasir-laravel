@@ -3,15 +3,21 @@
     <div class="h-screen w-full">
         <h1 class="text-2xl font-bold mb-4">Sistem Kasir - {{ Auth::user()->name }}</h1>
 
-        <div id="pos-container" class="flex flex-col px-2 py-2 lg:flex-row gap-4">
-
-            <div class="flex flex-col lg:w-8/12 bg-white p-2 rounded-lg shadow-lg h-[80vh] lg:h-[90vh]">
+        <div id="pos-container" class="flex flex-col py-2 lg:flex-row gap-4">
+            <div
+                class="flex flex-col lg:w-8/12 bg-white p-2 rounded-lg border border-gray-300 shadow-lg h-[80vh] lg:h-[90vh]">
                 <div class="flex mb-4 gap-2">
-                    <input type="text" id="search-input" placeholder="Cari Produk / Scan SKU..."
+                    <input type="text" id="search-input" placeholder="Cari Produk..."
                         class="flex-1 px-4 py-2 border rounded-lg focus:ring-blue-500"
                         onkeydown="if(event.key === 'Enter') handleScan(event)">
-                    <button onclick="resetSearch()"
-                        class="px-4 py-2 bg-gray-200 cursor-pointer rounded-lg hover:bg-gray-300">Reset</button>
+                    <button onclick="resetSearch()" id="reset-btn"
+                        class="hidden px-4 py-2 bg-blue-600 text-white font-bold cursor-pointer rounded-lg hover:bg-blue-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                    </button>
                 </div>
 
                 <div id="category-filter" class="mb-4 flex space-x-2 overflow-x-auto pb-2 custom-scroll">
@@ -28,11 +34,12 @@
                 </div>
 
                 <div id="product-grid"
-                    class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-4 gap-4 overflow-y-auto custom-scroll pr-2 flex-1">
+                    class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-4 gap-4 overflow-y-auto custom-scroll p-1 flex-1">
                 </div>
             </div>
 
-            <div class="flex flex-col lg:w-4/12 bg-white p-4 rounded-lg shadow-lg overflow-y-auto h-[80vh] lg:h-[90vh]">
+            <div
+                class="flex flex-col lg:w-4/12 bg-white p-4 border border-gray-300 rounded-lg shadow-lg overflow-y-auto h-[80vh] lg:h-[90vh]">
                 <div id="cart-wrapper">
                     <h2 class="text-xl font-bold mb-4">Keranjang Belanja</h2>
 
@@ -185,8 +192,8 @@
             discountTypeSelectEl: document.getElementById("discount-type-select"),
             amountPaidInputEl: document.getElementById("amount-paid-input"),
             customerSelectEl: document.getElementById("customer-select"),
-            discountDisplaySpan: document.getElementById("discount-display"), // Span display diskon
-            subtotalValueSpan: document.getElementById("subtotal-value"), // Span display subtotal
+            discountDisplaySpan: document.getElementById("discount-display"),
+            subtotalValueSpan: document.getElementById("subtotal-value"),
             paymentButtons: document.querySelectorAll('#payment-buttons button'),
         };
 
@@ -222,7 +229,7 @@
              class=" ${product.stock === 0 ? 'cursor-not-allowed opacity-50':'cursor-pointer hover:shadow-lg'} w-full h-auto border rounded-lg p-3 transition duration-150 
              ${
                  state.cart.some((item) => item.id === product.id)
-                     ? "border-blue-500 ring-2 ring-blue-500"
+                     ? "border-blue-600 shadow-md shadow-blue-600"
                      : ""
              }">
             <img src="${
@@ -290,8 +297,8 @@
                 <button onclick="removeFromCart(${
                     item.id
                 })" class="text-red-500 ml-4 hover:text-red-700 cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.86 11.14A2 2 0 0116.14 20H7.86a2 2 0 01-1.92-1.86L5 7m5 4v6m4-6v6m4-10H5"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -312,10 +319,10 @@
             elements.customerSelectEl.innerHTML = `
         <option value="umum">Umum (Tanpa Member)</option>
         ${state.customers.map(customer => `
-                                                                                                                                            <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
-                                                                                                                                            ${customer.name} (Member)
-                                                                                                                                            </option>
-                                                                                                                                        `).join("")}
+                                                                                                                                                                                                                                                                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
+                                                                                                                                                                                                                                                                    ${customer.name} (Member)
+                                                                                                                                                                                                                                                                    </option>
+                                                                                                                                                                                                                                                                `).join("")}
     `;
             elements.customerSelectEl.value = state.selectedCustomer || 'umum'; // Pastikan seleksi benar
 
@@ -482,6 +489,9 @@
         window.resetSearch = function() {
             state.searchTerm = "";
             state.selectedCategory = null;
+
+            document.getElementById('reset-btn').classList.add('hidden');
+
             renderAll();
         };
 
@@ -578,6 +588,12 @@
 
             elements.searchInput.addEventListener("input", (e) => {
                 state.searchTerm = e.target.value;
+                const resetBtn = document.getElementById('reset-btn');
+                if (state.searchTerm.trim() !== "") {
+                    resetBtn.classList.remove('hidden');
+                } else {
+                    resetBtn.classList.add('hidden');
+                }
                 renderAll();
             });
         });

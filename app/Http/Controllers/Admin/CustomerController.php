@@ -14,7 +14,7 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = Customer::latest()->paginate(10);
-        return view('admin.customers.index', compact('customers'));
+        return view('admin.customers.index', compact('customers'), ['title' => 'Daftar Pelanggan']);
     }
 
     /**
