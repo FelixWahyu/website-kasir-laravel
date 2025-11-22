@@ -21,7 +21,7 @@ Route::get('/', function () {
         return redirect()->route(Auth::user()->role === 'admin' ? 'admin.dashboard' : 'kasir.dashboard');
     }
 
-    return view('auth.login');
+    return redirect()->route('login');
 });
 
 Route::middleware('guest')->group(function () {

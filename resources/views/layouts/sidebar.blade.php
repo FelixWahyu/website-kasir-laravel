@@ -10,7 +10,7 @@
                     class="h-16 w-auto object-contain mx-auto rounded-md">
             @endif
             <h1 class="text-xl font-bold text-gray-800 text-center">
-                {{ $settings['app_name'] ?? 'Sistem Point Of Sales' }}
+                {{ $settings['app_name'] ?? 'Kasir Toko ABCD' }}
             </h1>
         </a>
         <button @click="open = false" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">

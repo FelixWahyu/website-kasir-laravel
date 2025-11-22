@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 class PasswordController extends Controller
@@ -30,9 +33,25 @@ class PasswordController extends Controller
 
     public function showResetForm($token)
     {
+        $recordToken = DB::table('password_reset_tokens')->where('email', request()->email)->first();
+
+        if (!$recordToken) {
+            return redirect()->route('password.request')
+                ->withErrors(['email' => 'Token reset password tidak valid atau sudah kadaluarsa.']);
+        }
+
+        if (!Hash::check($token, $recordToken->token)) {
+            return redirect()->route('password.request')
+                ->withErrors(['email' => 'Token reset password tidak valid atau sudah kadaluarsa.']);
+        }
+
+        if (Carbon::parse($recordToken->created_at)->addMinutes(30)->isPast()) {
+            return redirect()->route('password.request')->withErrors(['email' => 'Token sudah kadaluarsa silahkan kirim ulang kembali!']);
+        }
+
         return view('auth.reset-password', [
             'token' => $token,
-            'email' => request()->email,
+            'email' => $recordToken->email,
         ]);
     }
 
@@ -48,7 +67,7 @@ class PasswordController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
                 $user->forceFill([
-                    'password' => bcrypt($password)
+                    'password' => Hash::make($password)
                 ])->save();
             }
         );

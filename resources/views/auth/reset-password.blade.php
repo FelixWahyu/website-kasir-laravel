@@ -42,7 +42,7 @@
 
                 <div>
                     <button type="submit"
-                        class="w-full px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                        class="w-full px-4 py-2 font-semibold cursor-pointer text-white bg-blue-600 rounded-md hover:bg-blue-700">
                         Rubah Password
                     </button>
                 </div>

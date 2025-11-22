@@ -81,7 +81,8 @@
 
     <div class="receipt-container">
         <header>
-            <h3 class="header-text" style="margin: 0; font-size: 10pt;">TOKO KASIR ANDA</h3>
+            <h3 class="header-text" style="margin: 0; font-size: 10pt;">{{ $settings['app_name'] ?? 'Kasir Toko ABCD' }}
+            </h3>
             <p class="header-text" style="font-size: 7pt;">Jl. Jend. Sudirman No. 123, Jakarta</p>
         </header>
 
