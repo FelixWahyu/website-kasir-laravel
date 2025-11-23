@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginSessionController;
 use App\Http\Controllers\Kasir\DashboardKasirController;
 use App\Http\Controllers\Kasir\TransactionStoreController;
@@ -51,6 +52,13 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
 
     Route::get('/admin/settings', [SettingController::class, 'edit'])->name('admin.settings');
     Route::post('/admin/settings', [SettingController::class, 'update'])->name('settings.update');
+
+    Route::get('/admin/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/admin/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/admin/users/create', [UserController::class, 'store'])->name('users.store');
+    Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/admin/users/{user}', [UserController::class, 'delete'])->name('users.delete');
 });
 
 Route::middleware(['auth', 'roles:kasir'])->group(function () {

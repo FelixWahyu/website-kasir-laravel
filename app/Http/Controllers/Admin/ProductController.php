@@ -53,9 +53,9 @@ class ProductController extends Controller
             'category_id' => ['required', 'exists:categories,id'],
             'product_name' => ['required', 'string', 'max:255'],
             'sku' => ['nullable', 'string', 'unique:products,sku', 'max:50'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'], // Max 2MB
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'purchase_price' => ['required', 'integer', 'min:0'],
-            'selling_price' => ['required', 'integer', 'min:0', 'gte:purchase_price'], // Harga jual >= Harga beli
+            'selling_price' => ['required', 'integer', 'min:0', 'gte:purchase_price'],
             'stock' => ['required', 'integer', 'min:0'],
             'stock_minimum' => ['required', 'integer', 'min:0'],
         ]);
@@ -63,7 +63,7 @@ class ProductController extends Controller
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('products', 'public');
-            $validated['image'] = $imagePath; // Simpan path-nya ke database
+            $validated['image'] = $imagePath;
         }
 
         Product::create($validated);
@@ -97,7 +97,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
             'product_name' => ['required', 'string', 'max:255'],
-            'sku' => ['nullable', 'string', 'max:50', 'unique:products,sku,' . $product->id], // Kecuali ID produk ini
+            'sku' => ['nullable', 'string', 'max:50', 'unique:products,sku,' . $product->id],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
             'purchase_price' => ['required', 'integer', 'min:0'],
             'selling_price' => ['required', 'integer', 'min:0', 'gte:purchase_price'],
