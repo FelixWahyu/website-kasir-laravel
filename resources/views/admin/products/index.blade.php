@@ -14,7 +14,7 @@
             </div>
         @endif
 
-        <div class="flex justify-between mb-4">
+        <div class="flex justify-between items-center mb-4">
             <div class="flex items-center w-1/3 gap-1">
                 <form action="{{ route('products.index') }}" method="GET"
                     class="flex bg-white w-full border border-gray-400 items-center shadow-sm rounded-lg">
@@ -46,7 +46,7 @@
             </a>
         </div>
 
-        <div class="overflow-x-auto bg-white rounded-lg shadow">
+        <div class="overflow-x-auto bg-white rounded-lg shadow-md">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-800">
                     <tr>
