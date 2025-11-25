@@ -4,7 +4,8 @@
         <h1 class="text-3xl font-bold mb-6 dark:text-gray-800">Manajemen Pelanggan (Member)</h1>
 
         @if (session('success'))
-            <div id="alert-success" class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">{{ session('success') }}
+            <div id="alert-success" class="alert-message p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
+                {{ session('success') }}
             </div>
         @endif
 
@@ -46,7 +47,7 @@
                                         Edit
                                     </a>
                                     <form action="{{ route('customers.destroy', $customer) }}" method="POST"
-                                        onsubmit="openConfirmModal(event,this);">
+                                        onsubmit="openConfirmModal(this,event);">
                                         @csrf @method('DELETE')
                                         <button type="submit"
                                             class="text-red-600 flex items-center px-1 py-0.5 cursor-pointer hover:text-red-800">
@@ -108,7 +109,7 @@
         </div>
     </div>
 @endsection
-@push('script')
+{{-- @push('script')
     <script>
         const alert = document.getElementById('alert-success');
         setTimeout(() => {
@@ -156,4 +157,4 @@
             formToSubmit = null;
         }
     </script>
-@endpush
+@endpush --}}

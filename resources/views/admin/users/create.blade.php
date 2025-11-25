@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
-    <h2 class="text-3xl font-semibold mb-6">Tambah User baru</h2>
-    <div class="container max-w-3xl bg-white shadow-md rounded-lg border border-gray-300 p-2">
+    <h2 class="text-3xl font-bold mb-6">Tambah User baru</h2>
+    <div class="container max-w-3xl bg-white shadow-md rounded-lg border border-gray-300 p-4">
         <form method="POST" action="{{ route('users.store') }}" class="space-y-6 p-4">
             @csrf
             <div>
@@ -60,7 +60,7 @@
 
             <div class="flex items-center justify-end gap-4">
                 <a href="{{ route('users.index') }}"
-                    class="px-4 py-2 font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-md shadow-sm">Batal</a>
+                    class="px-4 py-2 font-semibold text-gray-800 bg-gray-100 border border-gray-300 hover:bg-gray-200 rounded-md shadow-sm">Batal</a>
                 <button type="submit"
                     class="px-4 py-2 font-semibold text-white cursor-pointer bg-blue-600 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Simpan

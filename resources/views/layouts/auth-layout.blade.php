@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite('resources/css/app.css')
 </head>
 
 <body class="bg-gray-50 font-sans antialiased">
@@ -129,7 +129,8 @@
             logoutForm.submit();
         });
     </script>
-    @stack('script')
+    @vite('resources/js/app.js')
+    {{-- @stack('script') --}}
 </body>
 
 </html>

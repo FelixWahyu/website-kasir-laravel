@@ -5,14 +5,14 @@
 
         @if (session('success'))
             <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.400ms x-init="setTimeout(() => show = false, 2500)"
-                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900 dark:text-green-300">
+                class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
                 {{ session('success') }}
             </div>
         @endif
 
         @if (session('error'))
             <div x-data="{ show: true }" x-show="show" x-transition.opacity.duration.400ms x-init="setTimeout(() => show = false, 2500)"
-                class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-900 dark:text-red-300">
+                class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
                 {{ session('error') }}
             </div>
         @endif
@@ -64,7 +64,7 @@
                                     </a>
 
                                     <form action="{{ route('categories.destroy', $category) }}" method="POST"
-                                        onsubmit="openConfirmModal(event,this);">
+                                        onsubmit="openConfirmModal(this,event);">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -131,7 +131,7 @@
         </div>
     </div>
 @endsection
-@push('script')
+{{-- @push('script')
     <script>
         let formToSubmit = null;
         const modal = document.getElementById('confirmModal');
@@ -173,4 +173,4 @@
             formToSubmit = null;
         }
     </script>
-@endpush
+@endpush --}}

@@ -98,7 +98,7 @@
                                         Edit
                                     </a>
                                     <form action="{{ route('products.destroy', $product) }}" method="POST"
-                                        onsubmit="openConfirmModal(event,this);">
+                                        onsubmit="openConfirmModal(this,event);">
                                         @csrf @method('DELETE')
                                         <button type="submit"
                                             class="text-red-600 flex items-center px-1 py-0.5 cursor-pointer hover:text-red-800">
@@ -161,52 +161,52 @@
 @endsection
 @push('script')
     <script>
-        document.querySelectorAll(".alert-message").forEach(alert => {
-            setTimeout(() => {
-                if (alert) {
-                    alert.style.transition = 'opacity 0.4s ease';
-                    alert.style.opacity = '0';
-                    setTimeout(() => alert.remove(), 400);
-                }
-            }, 2500);
-        });
+        // document.querySelectorAll(".alert-message").forEach(alert => {
+        //     setTimeout(() => {
+        //         if (alert) {
+        //             alert.style.transition = 'opacity 0.4s ease';
+        //             alert.style.opacity = '0';
+        //             setTimeout(() => alert.remove(), 400);
+        //         }
+        //     }, 2500);
+        // });
 
-        let formToSubmit = null;
-        const modal = document.getElementById('confirmModal');
-        const modalBox = document.getElementById('modalBox');
+        // let formToSubmit = null;
+        // const modal = document.getElementById('confirmModal');
+        // const modalBox = document.getElementById('modalBox');
 
-        function openConfirmModal(form) {
-            event.preventDefault();
-            formToSubmit = form;
+        // function openConfirmModal(form) {
+        //     event.preventDefault();
+        //     formToSubmit = form;
 
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+        //     modal.classList.remove('hidden');
+        //     modal.classList.add('flex');
 
-            setTimeout(() => {
-                modalBox.classList.remove('scale-90', 'opacity-0');
-                modalBox.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
+        //     setTimeout(() => {
+        //         modalBox.classList.remove('scale-90', 'opacity-0');
+        //         modalBox.classList.add('scale-100', 'opacity-100');
+        //     }, 10);
+        // }
 
-        document.getElementById('cancelBtn').addEventListener('click', function() {
-            closeModal();
-        });
+        // document.getElementById('cancelBtn').addEventListener('click', function() {
+        //     closeModal();
+        // });
 
-        document.getElementById('confirmBtn').addEventListener('click', function() {
-            if (formToSubmit) {
-                formToSubmit.submit();
-            }
-        });
+        // document.getElementById('confirmBtn').addEventListener('click', function() {
+        //     if (formToSubmit) {
+        //         formToSubmit.submit();
+        //     }
+        // });
 
-        function closeModal() {
-            modalBox.classList.add('scale-90', 'opacity-0');
-            modalBox.classList.remove('scale-100', 'opacity-100');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 200);
+        // function closeModal() {
+        //     modalBox.classList.add('scale-90', 'opacity-0');
+        //     modalBox.classList.remove('scale-100', 'opacity-100');
+        //     setTimeout(() => {
+        //         modal.classList.add('hidden');
+        //         modal.classList.remove('flex');
+        //     }, 200);
 
-            formToSubmit = null;
-        }
+        //     formToSubmit = null;
+        // }
     </script>
 @endpush

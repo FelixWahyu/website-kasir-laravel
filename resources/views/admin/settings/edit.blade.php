@@ -4,12 +4,12 @@
         <h1 class="text-3xl font-bold mb-6">Pengaturan Website</h1>
 
         @if (session('success'))
-            <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
+            <div class="alert-message p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">
                 {{ session('success') }}
             </div>
         @endif
         @if (session('error'))
-            <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
+            <div class="alert-message p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">
                 {{ session('error') }}
             </div>
         @endif
