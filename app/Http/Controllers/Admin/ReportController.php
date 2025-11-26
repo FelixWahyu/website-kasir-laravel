@@ -34,7 +34,7 @@ class ReportController extends Controller
         $totalDiscount = $aggregateData->sum('discount');
         $totalGrossProfit = $this->calculateGrossProfit($aggregateData);
 
-        $transactions = $transactions->paginate(20)->withQueryString();
+        $transactions = $transactions->paginate(10)->withQueryString();
 
         return view('admin.reports.index', compact(
             'transactions',

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Kasir\PosController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
@@ -11,8 +12,8 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginSessionController;
 use App\Http\Controllers\Kasir\DashboardKasirController;
 use App\Http\Controllers\Kasir\TransactionStoreController;
@@ -46,6 +47,9 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::resource('/admin/categories', CategoryController::class)->except(['show']);
 
     Route::resource('/admin/products', ProductController::class);
+
+    Route::resource('discounts', DiscountController::class);
+    Route::put('discounts/{discount}/toggle', [DiscountController::class, 'toggleStatus'])->name('discounts.toggle');
 
     Route::get('/admin/reports', [ReportController::class, 'reportIndex'])->name('admin.reports');
     Route::get('/admin/reports/pdf', [ReportController::class, 'reportPdf'])->name('admin.reports.pdf');

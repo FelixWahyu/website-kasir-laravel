@@ -112,7 +112,8 @@
     <script>
         window.POS_DATA = {
             products: @json($productsJson),
-            customers: @json($customersJson)
+            customers: @json($customersJson),
+            discounts: @json($discountsJson)
         };
         const initialProductsJson = @json($productsJson);
         const initialCustomersJson = @json($customersJson);
@@ -120,10 +121,12 @@
 
         const productsData = JSON.parse(window.POS_DATA.products || '[]');
         const customersData = JSON.parse(window.POS_DATA.customers || '[]');
+        const discountsData = JSON.parse(window.POS_DATA.discounts || '[]');
 
         const state = {
             products: productsData,
             customers: customersData,
+            discounts: discountsData,
             searchTerm: '',
             selectedCategory: null,
             cart: [],
@@ -139,15 +142,71 @@
             return new Intl.NumberFormat("id-ID").format(Math.round(value));
         }
 
+        function getAutomaticDiscount() {
+            if (state.selectedCustomer === 'umum' || state.selectedCustomer === null) {
+                return 0;
+            }
+
+            const customerId = Number(state.selectedCustomer);
+            const customer = state.customers.find(c => c.id === customerId);
+
+            if (!customer) return 0;
+
+            let bestDiscountPercentage = 0;
+            const totalSpent = customer.total_spent || 0;
+            const transactionCount = customer.transaction_count || 0;
+
+            // Iterasi semua diskon aktif
+            state.discounts.forEach(discount => {
+                if (!discount.is_active) {
+                    return;
+                }
+
+                // 1. Cek Persyaratan MINIMAL Total Belanja
+                const meetsMinTotal = totalSpent >= discount.min_total_transaction;
+
+                // 2. Cek Persyaratan MINIMAL Jumlah Transaksi (Asumsi: Kolom max_transactions_count 
+                //    diisi dengan nilai MINIMAL yang disyaratkan, e.g., 10x)
+                const meetsMinTransCount = transactionCount >= discount.max_transactions_count;
+
+                // KUNCI: Diskon hanya diberikan jika SEMUA (AND) persyaratan terpenuhi
+                if (meetsMinTotal && meetsMinTransCount && discount.percentage > bestDiscountPercentage) {
+                    bestDiscountPercentage = discount.percentage;
+                }
+            });
+
+            return bestDiscountPercentage;
+        }
+
         function calculateDiscountValue() {
             const sub = calculateSubtotal();
             const discInput = Number(state.discountInput);
 
+            // 1. Hitung Diskon Member Otomatis (Persentase)
+            const autoDiscountPercentage = getAutomaticDiscount();
+            const autoDiscountAmount = sub * (autoDiscountPercentage / 100);
+
+            // 2. Hitung Diskon Manual Kasir
+            let manualDiscountAmount = 0;
             if (state.discountType === "percentage") {
                 const percentage = Math.min(discInput, 100) / 100;
-                return sub * percentage;
+                manualDiscountAmount = sub * percentage;
+            } else {
+                manualDiscountAmount = Math.min(discInput, sub);
             }
-            return Math.min(discInput, sub);
+
+            // 3. Pilih Diskon Terbaik (Diskon Member Otomatis bersifat eksklusif)
+            // Aturan: Jika ada diskon member otomatis, abaikan diskon manual kasir 
+            //         Kecuali jika diskon manual Kasir lebih besar (seperti kupon khusus)
+
+            // Kita akan menggunakan Diskon Member jika ia lebih besar dari 0
+            if (autoDiscountAmount > manualDiscountAmount) {
+                // Jika Diskon Otomatis > Diskon Manual, gunakan Otomatis.
+                return autoDiscountAmount;
+            }
+
+            // Default: Gunakan Diskon Manual Kasir
+            return manualDiscountAmount;
         }
 
         function calculateSubtotal() {
@@ -266,6 +325,7 @@
             const total = calculateTotal();
             const change = calculateChange();
             const isCartEmpty = state.cart.length === 0;
+            const autoDiscountPercentage = getAutomaticDiscount();
 
             if (isCartEmpty) {
                 elements.cartList.innerHTML = `<div class="text-center text-gray-500 mt-10">Keranjang kosong.</div>`;
@@ -305,24 +365,24 @@
             <p class="ml-2 font-semibold w-20 text-right text-sm">Rp ${formatCurrency(
                 item.quantity * item.selling_price
             )}</p>
-        </div>
-    `
-                )
-                .join("");
+        </div>`).join("");
 
             elements.subtotalValueSpan.textContent = `Rp ${formatCurrency(calculateSubtotal())}`;
 
+            const isDiscountAuto = autoDiscountPercentage > 0;
             elements.discountInputEl.value = state.discountInput;
+            elements.discountInputEl.disabled = isDiscountAuto;
+            elements.discountInputEl.classList.toggle('bg-gray-100', isDiscountAuto);
 
             elements.discountTypeSelectEl.value = state.discountType;
 
             elements.customerSelectEl.innerHTML = `
         <option value="umum">Umum (Tanpa Member)</option>
         ${state.customers.map(customer => `
-                                                                                                                                                                                                                                                                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
-                                                                                                                                                                                                                                                                    ${customer.name} (Member)
-                                                                                                                                                                                                                                                                    </option>
-                                                                                                                                                                                                                                                                `).join("")}
+                                                                                                                                                                                                                                                                                                                                                <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
+                                                                                                                                                                                                                                                                                                                                                ${customer.name} (Member)
+                                                                                                                                                                                                                                                                                                                                                </option>
+                                                                                                                                                                                                                                                                                                                                            `).join("")}
     `;
             elements.customerSelectEl.value = state.selectedCustomer || 'umum'; // Pastikan seleksi benar
 
@@ -331,8 +391,14 @@
             elements.amountPaidInputEl.value = state.amountPaid;
 
             const discount = calculateDiscountValue();
-            elements.discountDisplaySpan.innerHTML =
-                `${state.discountType === "percentage" ? state.discountInput + "%" : "Rp " + formatCurrency(discount)}`;
+            if (autoDiscountPercentage > 0) {
+                elements.discountDisplaySpan.innerHTML = autoDiscountPercentage + "%";
+            } else {
+                elements.discountDisplaySpan.innerHTML =
+                    state.discountType === "percentage" ?
+                    state.discountInput + "%" :
+                    "Rp " + formatCurrency(discount);
+            }
 
             elements.paymentButtons.forEach(btn => {
                 const method = btn.getAttribute('data-method');

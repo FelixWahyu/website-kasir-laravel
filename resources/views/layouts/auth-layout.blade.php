@@ -130,7 +130,7 @@
         });
     </script>
     @vite('resources/js/app.js')
-    {{-- @stack('script') --}}
+    @stack('script')
 </body>
 
 </html>
