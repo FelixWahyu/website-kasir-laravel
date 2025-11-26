@@ -19,12 +19,10 @@ class Customer extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    // Pastikan ini ada:
     protected $appends = ['total_spent', 'transaction_count'];
 
     public function getTotalSpentAttribute()
     {
-        // Hitung total_amount dari semua transaksi
         return $this->transactions()->sum('total_amount');
     }
 

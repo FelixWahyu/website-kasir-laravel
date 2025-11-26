@@ -156,20 +156,15 @@
             const totalSpent = customer.total_spent || 0;
             const transactionCount = customer.transaction_count || 0;
 
-            // Iterasi semua diskon aktif
             state.discounts.forEach(discount => {
                 if (!discount.is_active) {
                     return;
                 }
 
-                // 1. Cek Persyaratan MINIMAL Total Belanja
                 const meetsMinTotal = totalSpent >= discount.min_total_transaction;
 
-                // 2. Cek Persyaratan MINIMAL Jumlah Transaksi (Asumsi: Kolom max_transactions_count 
-                //    diisi dengan nilai MINIMAL yang disyaratkan, e.g., 10x)
                 const meetsMinTransCount = transactionCount >= discount.max_transactions_count;
 
-                // KUNCI: Diskon hanya diberikan jika SEMUA (AND) persyaratan terpenuhi
                 if (meetsMinTotal && meetsMinTransCount && discount.percentage > bestDiscountPercentage) {
                     bestDiscountPercentage = discount.percentage;
                 }
@@ -182,11 +177,9 @@
             const sub = calculateSubtotal();
             const discInput = Number(state.discountInput);
 
-            // 1. Hitung Diskon Member Otomatis (Persentase)
             const autoDiscountPercentage = getAutomaticDiscount();
             const autoDiscountAmount = sub * (autoDiscountPercentage / 100);
 
-            // 2. Hitung Diskon Manual Kasir
             let manualDiscountAmount = 0;
             if (state.discountType === "percentage") {
                 const percentage = Math.min(discInput, 100) / 100;
@@ -195,17 +188,10 @@
                 manualDiscountAmount = Math.min(discInput, sub);
             }
 
-            // 3. Pilih Diskon Terbaik (Diskon Member Otomatis bersifat eksklusif)
-            // Aturan: Jika ada diskon member otomatis, abaikan diskon manual kasir 
-            //         Kecuali jika diskon manual Kasir lebih besar (seperti kupon khusus)
-
-            // Kita akan menggunakan Diskon Member jika ia lebih besar dari 0
             if (autoDiscountAmount > manualDiscountAmount) {
-                // Jika Diskon Otomatis > Diskon Manual, gunakan Otomatis.
                 return autoDiscountAmount;
             }
 
-            // Default: Gunakan Diskon Manual Kasir
             return manualDiscountAmount;
         }
 
@@ -379,12 +365,12 @@
             elements.customerSelectEl.innerHTML = `
         <option value="umum">Umum (Tanpa Member)</option>
         ${state.customers.map(customer => `
-                                                                                                                                                                                                                                                                                                                                                <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
-                                                                                                                                                                                                                                                                                                                                                ${customer.name} (Member)
-                                                                                                                                                                                                                                                                                                                                                </option>
-                                                                                                                                                                                                                                                                                                                                            `).join("")}
+                                                                                                                                                                                                                                                                                                                                                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
+                                                                                                                                                                                                                                                                                                                                                    ${customer.name} (Member)
+                                                                                                                                                                                                                                                                                                                                                    </option>
+                                                                                                                                                                                                                                                                                                                                                `).join("")}
     `;
-            elements.customerSelectEl.value = state.selectedCustomer || 'umum'; // Pastikan seleksi benar
+            elements.customerSelectEl.value = state.selectedCustomer || 'umum';
 
             const isTunai = state.paymentMethod === "tunai";
             elements.amountPaidInputEl.disabled = !isTunai;
@@ -430,7 +416,6 @@
         </button>
     `;
         }
-
 
         function updateActiveCategoryButton() {
             const buttons = document.querySelectorAll(".category-btn");
@@ -632,7 +617,7 @@
         };
 
         window.printReceipt = function(transactionId) {
-            const receiptUrl = `/receipt/${transactionId}`; // Sesuai dengan rute /receipt/{transaction}
+            const receiptUrl = `/receipt/${transactionId}`;
 
             const printWindow = window.open(receiptUrl, '_blank');
             if (printWindow) {
