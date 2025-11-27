@@ -98,6 +98,8 @@
 
         </div>
     </div>
+    @stack('script')
+    @vite('resources/js/app.js')
     {{-- <script>
         let logoutForm = document.getElementById('logoutForm');
         const logoutModal = document.getElementById('logoutModal');
@@ -129,8 +131,6 @@
             logoutForm.submit();
         });
     </script> --}}
-    @vite('resources/js/app.js')
-    @stack('script')
 </body>
 
 </html>

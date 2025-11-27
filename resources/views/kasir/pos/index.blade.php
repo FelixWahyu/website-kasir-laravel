@@ -76,7 +76,7 @@
                             <label for="customer-select" class="block text-sm font-medium mt-2">Pelanggan (Member)</label>
                             <select onchange="updateState('selectedCustomer', this.value)" id="customer-select"
                                 class="w-full mt-1 p-1 border rounded-lg text-sm">
-                                <option value="umum">Umum (Tanpa Member)</option>
+                                <option value="">Umum (Tanpa Member)</option>
                             </select>
                         </div>
                     </div>
@@ -115,9 +115,6 @@
             customers: @json($customersJson),
             discounts: @json($discountsJson)
         };
-        const initialProductsJson = @json($productsJson);
-        const initialCustomersJson = @json($customersJson);
-
 
         const productsData = JSON.parse(window.POS_DATA.products || '[]');
         const customersData = JSON.parse(window.POS_DATA.customers || '[]');
@@ -365,10 +362,10 @@
             elements.customerSelectEl.innerHTML = `
         <option value="umum">Umum (Tanpa Member)</option>
         ${state.customers.map(customer => `
-                                                                                                                                                                                                                                                                                                                                                    <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
-                                                                                                                                                                                                                                                                                                                                                    ${customer.name} (Member)
-                                                                                                                                                                                                                                                                                                                                                    </option>
-                                                                                                                                                                                                                                                                                                                                                `).join("")}
+                                                                                                                                                                                                                                                                                                                                                            <option value="${customer.id}" ${state.selectedCustomer == customer.id ? "selected" : ""}>
+                                                                                                                                                                                                                                                                                                                                                            ${customer.name} (Member)
+                                                                                                                                                                                                                                                                                                                                                            </option>
+                                                                                                                                                                                                                                                                                                                                                        `).join("")}
     `;
             elements.customerSelectEl.value = state.selectedCustomer || 'umum';
 
