@@ -1,7 +1,6 @@
 import "./bootstrap";
-import { openConfirmModal } from "./modal";
-window.openConfirmModal = openConfirmModal;
 import "./alert";
+import "./modal";
 import Alpine from "alpinejs";
 
 window.Alpine = Alpine;

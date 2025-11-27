@@ -98,7 +98,7 @@
 
         </div>
     </div>
-    <script>
+    {{-- <script>
         let logoutForm = document.getElementById('logoutForm');
         const logoutModal = document.getElementById('logoutModal');
         const logoutModalBox = document.getElementById('logoutModalBox');
@@ -128,7 +128,7 @@
         document.getElementById("confirmLogout").addEventListener("click", () => {
             logoutForm.submit();
         });
-    </script>
+    </script> --}}
     @vite('resources/js/app.js')
     @stack('script')
 </body>

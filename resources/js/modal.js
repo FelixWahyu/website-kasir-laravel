@@ -4,7 +4,11 @@ const modalBox = document.getElementById("modalBox");
 const cancelBtn = document.getElementById("cancelBtn");
 const confirmBtn = document.getElementById("confirmBtn");
 
-export function openConfirmModal(form, event) {
+let logoutForm = document.getElementById("logoutForm");
+const logoutModal = document.getElementById("logoutModal");
+const logoutModalBox = document.getElementById("logoutModalBox");
+
+function openConfirmModal(form, event) {
     event.preventDefault();
     formToSubmit = form;
 
@@ -37,3 +41,34 @@ export function openConfirmModal(form, event) {
         formToSubmit = null;
     }
 }
+
+function openLogoutModal() {
+    logoutModal.classList.remove("hidden");
+    logoutModal.classList.add("flex");
+
+    setTimeout(() => {
+        logoutModalBox.classList.remove("scale-90", "opacity-0");
+        logoutModalBox.classList.add("scale-100", "opacity-100");
+    }, 10);
+}
+
+function closeLogoutModal() {
+    logoutModalBox.classList.add("scale-90", "opacity-0");
+    logoutModalBox.classList.remove("scale-100", "opacity-100");
+
+    setTimeout(() => {
+        logoutModal.classList.add("hidden");
+        logoutModal.classList.remove("flex");
+    }, 200);
+}
+
+document
+    .getElementById("cancelLogout")
+    .addEventListener("click", closeLogoutModal);
+
+document.getElementById("confirmLogout").addEventListener("click", () => {
+    logoutForm.submit();
+});
+
+window.openConfirmModal = openConfirmModal;
+window.openLogoutModal = openLogoutModal;
