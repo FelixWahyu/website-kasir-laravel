@@ -38,7 +38,7 @@
                             class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                             Dibuat Pada</th>
                         <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                            class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                             Aksi</th>
                     </tr>
                 </thead>
@@ -54,7 +54,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2">
                                     <a href="{{ route('categories.edit', $category) }}"
-                                        class="text-indigo-600 flex items-center px-1 py-0.5 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-600">
+                                        class="text-yellow-600 flex items-center px-1 py-0.5 hover:text-yellow-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="size-5">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -68,7 +68,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            class="text-red-600 flex items-center px-1 py-0.5 cursor-pointer hover:text-red-800 dark:text-red-400 dark:hover:text-red-600">
+                                            class="text-red-600 flex items-center px-1 py-0.5 cursor-pointer hover:text-red-800">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="size-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round"

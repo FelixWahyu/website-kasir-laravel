@@ -56,7 +56,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase">Kategori</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase">Harga Jual</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase">Stok</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase">Aksi</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-white uppercase">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -89,7 +89,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2">
                                     <a href="{{ route('products.edit', $product) }}"
-                                        class="text-indigo-600 flex items-center px-1 py-0.5 hover:text-indigo-800">
+                                        class="text-yellow-600 flex items-center px-1 py-0.5 hover:text-yellow-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="size-5">
                                             <path stroke-linecap="round" stroke-linejoin="round"

@@ -40,7 +40,7 @@
                             <td class="border-b border-gray-300 py-3 px-5 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2 justify-center">
                                     <a href="{{ route('users.edit', $user) }}"
-                                        class="flex items-center px-1 py-0.5 text-blue-500 hover:text-blue-600">
+                                        class="flex items-center px-1 py-0.5 text-yellow-600 hover:text-yellow-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="size-5">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -90,7 +90,7 @@
             </div>
 
             <p class="text-gray-600 mb-6 leading-relaxed">
-                Menghapus produk akan mengubah stok dan laporan penjualan.
+                Menghapus user akan mengubah laporan penjualan.
                 Apakah Anda yakin ingin melanjutkan?
             </p>
 

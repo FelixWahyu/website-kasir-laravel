@@ -19,15 +19,15 @@
                 @csrf
                 @method('POST')
 
-                <div class="max-w-md">
-                    <label for="app_name" class="block text-sm font-medium text-gray-700">Nama Website</label>
+                <div class="mb-4">
+                    <label for="app_name" class="block text-sm font-medium text-gray-700">Nama</label>
                     <input type="text" name="app_name" id="app_name"
                         value="{{ old('app_name', $settings['app_name'] ?? '') }}"
                         class="block w-full mt-1 p-1 border border-gray-500 rounded-lg shadow-sm">
                 </div>
 
-                <div class="max-w-md">
-                    <label for="app_logo" class="block text-sm font-medium text-gray-700">Logo Website</label>
+                <div class="mb-4">
+                    <label for="app_logo" class="block text-sm font-medium text-gray-700">Logo</label>
                     <input type="file" name="app_logo" id="app_logo"
                         class="block w-full border border-gray-500 rounded-lg p-1 mt-1 text-sm text-gray-500 shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                     <p class="mt-1 text-xs text-gray-500">Kosongkan jika tidak ingin mengubah logo.</p>
