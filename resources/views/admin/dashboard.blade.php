@@ -31,7 +31,7 @@
         </div>
 
         <div class="bg-white grid grid-cols-1 p-6 rounded-lg shadow-md border border-gray-300">
-            <h2 class="text-xl font-semibold mb-4">Grafik Penjualan (7 Hari Terakhir)</h2>
+            <h2 class="text-xl font-semibold mb-4">Grafik Penjualan Harian</h2>
             <canvas id="salesChart" class="max-h-76"></canvas>
         </div>
 
@@ -124,7 +124,7 @@
             </header>
 
             <div id="chat-output" class="flex-1 p-3 overflow-y-auto space-y-3 bg-gray-50">
-                <div class="p-2 bg-blue-100 text-blue-800 rounded-lg self-start text-sm max-w-full">
+                <div class="p-2 bg-gray-200 text-gray-800 rounded-lg self-start text-sm max-w-full">
                     Halo, saya Gemini Ai Toko.
                 </div>
             </div>
@@ -150,11 +150,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const GEMINI_API_KEY = "AIzaSyCACQcf_3cCFZOD3dErJQ1DN3_ivdb0bFI";
-            const GEMINI_API_URL =
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=" +
-                GEMINI_API_KEY;
-
             const chatForm = document.getElementById('chat-form');
             const chatInput = document.getElementById('chat-input');
             const chatOutput = document.getElementById('chat-output');
@@ -185,15 +180,16 @@
                 chatInput.value = '';
                 chatSubmitBtn.disabled = true;
 
+                // Gunakan placeholder loading
                 const loadingMessage = document.createElement('div');
-                loadingMessage.className =
-                    'p-2 rounded-lg text-sm self-start text-left max-w-full bg-gray-200 text-gray-800';
+                // ... (setel class loading message) ...
                 loadingMessage.innerHTML = 'Sedang Menganalisis data...';
                 chatOutput.appendChild(loadingMessage);
                 chatOutput.scrollTop = chatOutput.scrollHeight;
 
                 try {
-                    const contextResponse = await fetch('/admin/ai', {
+                    // --- PANGGIL LARAVEL BACKEND (MENDAPATKAN JAWABAN AKHIR) ---
+                    const finalResponse = await fetch('/admin/ai', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -202,69 +198,120 @@
                         },
                         body: JSON.stringify({
                             query: userQuery
-                        })
+                        }) // Kirim hanya pertanyaan
                     });
 
-                    if (!contextResponse.ok) {
-                        throw new Error(
-                            `Gagal mengambil konteks data dari server: ${contextResponse.status}`);
+                    if (!finalResponse.ok) {
+                        throw new Error(`Gagal memproses. Status: ${finalResponse.status}`);
                     }
 
-                    const context = await contextResponse.json();
+                    const result = await finalResponse.json();
 
-                    const payload = {
-                        contents: [{
-                            parts: [{
-                                text: context.prompt
-                            }]
-                        }],
-                        systemInstruction: {
-                            parts: [{
-                                text: context.system_instruction
-                            }]
-                        },
-                    };
+                    // JAWABAN AKHIR sudah ada di 'result.answer' (sudah diproses oleh Gemini)
+                    const aiAnswer = result.answer;
 
-                    let geminiResponse;
-                    if (GEMINI_API_KEY.length > 0) {
-                        geminiResponse = await fetch(GEMINI_API_URL, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(payload)
-                        });
-                    } else {
-                        await new Promise(r => setTimeout(r, 1500));
-                        loadingMessage.innerHTML =
-                            'Mode Simulasi Aktif. Harap masukkan kunci API Gemini Anda.';
-                        return;
-                    }
-
-                    if (!geminiResponse.ok) {
-                        const errorData = await geminiResponse.json();
-                        throw new Error(errorData.error || errorData.message ||
-                            `API Error: ${geminiResponse.status}`);
-                    }
-
-                    const result = await geminiResponse.json();
-
-                    let aiAnswer = 'Kesalahan dalam format jawaban AI.';
-                    if (result.candidates && result.candidates[0].content.parts[0].text) {
-                        aiAnswer = result.candidates[0].content.parts[0].text;
-                    }
-
-                    const boldedAnswer = aiAnswer.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-
-                    loadingMessage.innerHTML = boldedAnswer.replace(/\n/g, '<br>');
+                    // Ganti placeholder dengan jawaban akhir
+                    // Kita tidak perlu parsing Markdown lagi, karena kita minta AI tidak menggunakannya
+                    loadingMessage.innerHTML = aiAnswer.replace(/\n/g, '<br>');
 
                 } catch (error) {
                     loadingMessage.innerHTML = `Gagal memproses: ${error.message}`;
                     console.error('AI Chat Error:', error);
                 } finally {
                     chatSubmitBtn.disabled = false;
+                    chatSubmitBtn.textContent = 'Kirim';
                 }
             });
+
+            // chatForm.addEventListener('submit', async function(e) {
+            //     e.preventDefault();
+            //     const userQuery = chatInput.value.trim();
+            //     if (!userQuery) return;
+
+            //     appendMessage('user', userQuery);
+            //     chatInput.value = '';
+            //     chatSubmitBtn.disabled = true;
+
+            //     const loadingMessage = document.createElement('div');
+            //     loadingMessage.className =
+            //         'p-2 rounded-lg text-sm self-start text-left max-w-full bg-gray-200 text-gray-800';
+            //     loadingMessage.innerHTML = 'Sedang Menganalisis data...';
+            //     chatOutput.appendChild(loadingMessage);
+            //     chatOutput.scrollTop = chatOutput.scrollHeight;
+
+            //     try {
+            //         const contextResponse = await fetch('/admin/ai', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+            //                     .content,
+            //             },
+            //             body: JSON.stringify({
+            //                 query: userQuery
+            //             })
+            //         });
+
+            //         if (!contextResponse.ok) {
+            //             throw new Error(
+            //                 `Gagal mengambil konteks data dari server: ${contextResponse.status}`);
+            //         }
+
+            //         const context = await contextResponse.json();
+
+            //         const payload = {
+            //             contents: [{
+            //                 parts: [{
+            //                     text: context.prompt
+            //                 }]
+            //             }],
+            //             systemInstruction: {
+            //                 parts: [{
+            //                     text: context.system_instruction
+            //                 }]
+            //             },
+            //         };
+
+            //         let geminiResponse;
+            //         if (GEMINI_API_KEY.length > 0) {
+            //             geminiResponse = await fetch(GEMINI_API_URL, {
+            //                 method: 'POST',
+            //                 headers: {
+            //                     'Content-Type': 'application/json'
+            //                 },
+            //                 body: JSON.stringify(payload)
+            //             });
+            //         } else {
+            //             await new Promise(r => setTimeout(r, 1500));
+            //             loadingMessage.innerHTML =
+            //                 'Mode Simulasi Aktif. Harap masukkan kunci API Gemini Anda.';
+            //             return;
+            //         }
+
+            //         if (!geminiResponse.ok) {
+            //             const errorData = await geminiResponse.json();
+            //             throw new Error(errorData.error || errorData.message ||
+            //                 `API Error: ${geminiResponse.status}`);
+            //         }
+
+            //         const result = await geminiResponse.json();
+
+            //         let aiAnswer = 'Kesalahan dalam format jawaban AI.';
+            //         if (result.candidates && result.candidates[0].content.parts[0].text) {
+            //             aiAnswer = result.candidates[0].content.parts[0].text;
+            //         }
+
+            //         const boldedAnswer = aiAnswer.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+            //         loadingMessage.innerHTML = boldedAnswer.replace(/\n/g, '<br>');
+
+            //     } catch (error) {
+            //         loadingMessage.innerHTML = `Gagal memproses: ${error.message}`;
+            //         console.error('AI Chat Error:', error);
+            //     } finally {
+            //         chatSubmitBtn.disabled = false;
+            //     }
+            // });
 
             const ctx = document.getElementById('salesChart');
             if (ctx) {

@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 
 class AiChatController extends Controller
 {
@@ -24,16 +25,16 @@ class AiChatController extends Controller
 
             if (str_contains($query, 'laba') && str_contains($query, 'hari ini')) {
                 $data = $this->getDailyGrossProfit(Carbon::today());
-                $analysisContext = 'laba kotor (gross profit) untuk hari ini.';
+                $analysisContext = 'laba kotor untuk hari ini.';
             } elseif (str_contains($query, 'laba')) {
                 $data = $this->getTotalGrossProfit();
-                $analysisContext = 'total laba kotor akumulatif.';
+                $analysisContext = 'total laba kotor keseluruhan.';
             } elseif (str_contains($query, 'produk') && (str_contains($query, 'habis') || str_contains($query, 'akan habis'))) {
                 $data = $this->getLowStockProducts(10)->toArray();
-                $analysisContext = 'daftar produk dengan stok rendah (dibawah 10) atau habis.';
+                $analysisContext = 'daftar produk dengan stok akan habis atau habis.';
             } elseif (str_contains($query, 'laris') || str_contains($query, 'terjual')) {
                 $data = $this->getTopSellingProducts(5)->toArray();
-                $analysisContext = '5 produk terlaris berdasarkan kuantitas terjual.';
+                $analysisContext = 'produk terlaris berdasarkan kuantitas terjual.';
             } elseif (str_contains($query, 'transaksi')) {
                 $data = $this->getDailyTransaction(Carbon::today());
                 $analysisContext = 'total transaksi kasir hari ini.';
@@ -42,12 +43,30 @@ class AiChatController extends Controller
                 $analysisContext = 'tidak ada data spesifik yang diminta, jawablah pertanyaan ini secara umum.';
             }
 
-            $systemPrompt = "Anda adalah Analis POS profesional. Tugas Anda adalah menganalisis data toko kasir yang disediakan. Jawablah pertanyaan pengguna ('$query') dalam Bahasa Indonesia yang ramah, ringkas, dan fokus pada data yang relevan. Data yang Anda dapatkan adalah: " . json_encode($data);
+            $geminiApiKey = config('services.gemini.key');
+            $geminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key={$geminiApiKey}";
 
-            return response()->json([
-                'prompt' => $query,
-                'system_instruction' => $systemPrompt,
-            ], 200);
+            $systemInstruction = "Anda adalah Analis POS profesional. Tugas Anda adalah menganalisis data toko kasir yang disediakan. Jawablah pertanyaan pengguna ('$query') dalam Bahasa Indonesia yang ramah, ringkas, dan fokus pada data yang relevan. Data yang Anda dapatkan adalah: " . json_encode($data);
+
+            $payload = [
+                'contents' => [['parts' => [['text' => $query]]]],
+                'systemInstruction' => ['parts' => [['text' => $systemInstruction]]],
+            ];
+
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post($geminiApiUrl, $payload);
+
+            if ($response->failed()) {
+                return response()->json(['answer' => 'Layanan AI ditolak. Harap periksa kunci API dan kuota Anda.'], 500);
+            }
+
+            $result = $response->json();
+
+            $aiAnswer = $result['candidates'][0]['content']['parts'][0]['text'] ?? "Gagal mendapatkan jawaban dari AI.";
+
+            // --- 4. KEMBALIKAN JAWABAN AKHIR KE FRONTEND ---
+            return response()->json(['answer' => $aiAnswer], 200);
         } catch (\Exception $e) {
             return response()->json(['answer' => 'Terjadi kesalahan server saat mengambil data: ' . $e->getMessage()], 500);
         }
@@ -90,7 +109,7 @@ class AiChatController extends Controller
     private function getDailyTransaction(Carbon $date)
     {
         $todaDate = $date->format('Y-m-d');
-        $transactionCount = Transaction::whereDate('created_at', $todaDate)->count();
+        $transactionCount = Transaction::whereDate('created_at', $todaDate)->get();
 
         return ['transaction_today' => $transactionCount];
     }
