@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AiChatController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
@@ -63,6 +64,8 @@ Route::middleware(['auth', 'roles:admin'])->group(function () {
     Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/admin/users/{user}', [UserController::class, 'delete'])->name('users.delete');
+
+    Route::post('/admin/ai', [AiChatController::class, 'handleQuery']);
 });
 
 Route::middleware(['auth', 'roles:kasir'])->group(function () {
