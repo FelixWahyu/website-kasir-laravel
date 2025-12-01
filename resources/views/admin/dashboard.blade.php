@@ -217,7 +217,6 @@
                     console.error('AI Chat Error:', error);
                 } finally {
                     chatSubmitBtn.disabled = false;
-                    chatSubmitBtn.textContent = 'Kirim';
                 }
             });
 

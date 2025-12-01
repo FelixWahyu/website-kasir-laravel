@@ -34,7 +34,10 @@ class AiChatController extends Controller
                 $analysisContext = 'daftar produk dengan stok akan habis atau habis.';
             } elseif (str_contains($query, 'laris') || str_contains($query, 'terjual')) {
                 $data = $this->getTopSellingProducts(5)->toArray();
-                $analysisContext = 'produk terlaris berdasarkan kuantitas terjual.';
+                $analysisContext = 'produk terlaris keseluruhan berdasarkan kuantitas terjual.';
+            } elseif (str_contains($query, 'terlaris') && str_contains($query, 'hari ini')) {
+                $data = $this->getTopSellingProducts(5)->toArray();
+                $analysisContext = 'produk terlaris berdasarkan kuantitas terjual hari ini.';
             } elseif (str_contains($query, 'transaksi')) {
                 $data = $this->getDailyTransaction(Carbon::today());
                 $analysisContext = 'total transaksi kasir hari ini.';
@@ -46,7 +49,7 @@ class AiChatController extends Controller
             $geminiApiKey = config('services.gemini.key');
             $geminiApiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key={$geminiApiKey}";
 
-            $systemInstruction = "Anda adalah Analis POS profesional. Tugas Anda adalah menganalisis data toko kasir yang disediakan. Jawablah pertanyaan pengguna ('$query') dalam Bahasa Indonesia yang ramah, ringkas, dan fokus pada data yang relevan. Data yang Anda dapatkan adalah: " . json_encode($data);
+            $systemInstruction = "Anda adalah Analis POS profesional. Tugas Anda adalah menganalisis data toko kasir yang disediakan. Jawablah pertanyaan pengguna ('$query') dalam Bahasa Indonesia yang ramah, jelas, detail dan fokus pada data yang relevan. Data yang Anda dapatkan adalah: " . json_encode($data);
 
             $payload = [
                 'contents' => [['parts' => [['text' => $query]]]],
@@ -108,9 +111,31 @@ class AiChatController extends Controller
     private function getDailyTransaction(Carbon $date)
     {
         $todaDate = $date->format('Y-m-d');
-        $transactionCount = Transaction::whereDate('created_at', $todaDate)->get();
+        $transactionCount = Transaction::with(['details.product', 'customer'])
+            ->whereDate('created_at', $todaDate)
+            ->get();
 
-        return ['transaction_today' => $transactionCount];
+        return [
+            'date' => $todaDate,
+            'transaction_today' => $transactionCount->map(function ($trx) {
+                return [
+                    'id' => $trx->id,
+                    'invoice' => $trx->invoice_number ?? '-',
+                    'customer' => $trx->customer->name ?? 'Umum',
+                    'total' => $trx->grand_total,
+                    'payment_type' => $trx->payment_method ?? '-',
+                    'created_at' => $trx->created_at->format('H:i:s'),
+                    'items' => $trx->details->map(function ($detail) {
+                        return [
+                            'product' => $detail->product->product_name ?? 'Produk dihapus',
+                            'qty' => $detail->quantity,
+                            'price' => $detail->selling_price,
+                            'subtotal' => $detail->quantity * $detail->selling_price,
+                        ];
+                    })
+                ];
+            })
+        ];
     }
 
     private function getLowStockProducts($threshold)
@@ -129,10 +154,12 @@ class AiChatController extends Controller
 
     private function getTopSellingProducts($limit)
     {
+        $today = Carbon::today()->format('Y-m-d');
+
         return DB::table('transaction_details')
             ->join('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
+            ->whereDate('transactions.created_at', $today)
             ->select(DB::raw('product_id, SUM(quantity) as total_quantity'))
-            // ->whereDate('transactions.created_at', $today)
             ->groupBy('product_id')
             ->orderByDesc('total_quantity')
             ->limit($limit)
