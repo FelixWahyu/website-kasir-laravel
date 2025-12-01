@@ -180,15 +180,14 @@
                 chatInput.value = '';
                 chatSubmitBtn.disabled = true;
 
-                // Gunakan placeholder loading
                 const loadingMessage = document.createElement('div');
-                // ... (setel class loading message) ...
+                loadingMessage.className =
+                    'p-2 rounded-lg text-sm self-start text-left max-w-full bg-gray-200 text-gray-800';
                 loadingMessage.innerHTML = 'Sedang Menganalisis data...';
                 chatOutput.appendChild(loadingMessage);
                 chatOutput.scrollTop = chatOutput.scrollHeight;
 
                 try {
-                    // --- PANGGIL LARAVEL BACKEND (MENDAPATKAN JAWABAN AKHIR) ---
                     const finalResponse = await fetch('/admin/ai', {
                         method: 'POST',
                         headers: {
@@ -198,7 +197,7 @@
                         },
                         body: JSON.stringify({
                             query: userQuery
-                        }) // Kirim hanya pertanyaan
+                        })
                     });
 
                     if (!finalResponse.ok) {
@@ -207,12 +206,11 @@
 
                     const result = await finalResponse.json();
 
-                    // JAWABAN AKHIR sudah ada di 'result.answer' (sudah diproses oleh Gemini)
                     const aiAnswer = result.answer;
 
-                    // Ganti placeholder dengan jawaban akhir
-                    // Kita tidak perlu parsing Markdown lagi, karena kita minta AI tidak menggunakannya
-                    loadingMessage.innerHTML = aiAnswer.replace(/\n/g, '<br>');
+                    const boldAnswer = aiAnswer.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+                    loadingMessage.innerHTML = boldAnswer.replace(/\n/g, '<br>');
 
                 } catch (error) {
                     loadingMessage.innerHTML = `Gagal memproses: ${error.message}`;

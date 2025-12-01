@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
@@ -65,7 +65,6 @@ class AiChatController extends Controller
 
             $aiAnswer = $result['candidates'][0]['content']['parts'][0]['text'] ?? "Gagal mendapatkan jawaban dari AI.";
 
-            // --- 4. KEMBALIKAN JAWABAN AKHIR KE FRONTEND ---
             return response()->json(['answer' => $aiAnswer], 200);
         } catch (\Exception $e) {
             return response()->json(['answer' => 'Terjadi kesalahan server saat mengambil data: ' . $e->getMessage()], 500);
@@ -130,7 +129,6 @@ class AiChatController extends Controller
 
     private function getTopSellingProducts($limit)
     {
-        $today = Carbon::today();
         return DB::table('transaction_details')
             ->join('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
             ->select(DB::raw('product_id, SUM(quantity) as total_quantity'))
